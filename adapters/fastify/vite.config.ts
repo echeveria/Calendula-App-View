@@ -11,5 +11,9 @@ export default extendConfig(baseConfig, () => {
       },
     },
     plugins: [nodeServerAdapter({ name: "fastify" })],
+    server: {
+      port: 3042,
+      host: '0.0.0.0',
+    },
   };
 });

@@ -8,14 +8,14 @@ COPY package.json ./
 COPY pnpm-lock.yaml ./
 
 # Инсталиране на зависимости
-RUN npm install
+RUN npm install -g pnpm
+RUN pnpm install
 
 # Копиране на останалия код
 COPY . .
 
 # Build client и server
-RUN npm run build.client
-RUN npm run build.server
+    RUN pnpm run build.server
 
 # Експониране на порт (например 3042)
 EXPOSE 3042
