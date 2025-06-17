@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+  "name": "KambaNiva",
+  "short_name": "Welcome to KambaNiva",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fff",
+  "description": "KambaNiva project app."
+}
