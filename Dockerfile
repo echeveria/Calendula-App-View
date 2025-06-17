@@ -17,8 +17,8 @@ COPY . .
 RUN npm run build.client
 RUN npm run build.server
 
-# Експониране на порт (например 3000)
-EXPOSE 3000
+# Експониране на порт (например 3042)
+EXPOSE 3042
 
 # Стартиране на Fastify сървъра
 CMD ["node", "server/entry.fastify"]
