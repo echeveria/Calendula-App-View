@@ -1,5 +1,5 @@
 # База образ с Node.js
-FROM node:18-alpine
+FROM node:22
 
 WORKDIR /app
 
