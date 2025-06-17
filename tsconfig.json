@@ -13,7 +13,6 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "incremental": true,
-    "tsBuildInfoFile": "tmp/cache/tsconfig.tsbuildinfo",
     "isolatedModules": true,
     "outDir": "tmp",
     "noEmit": true,
