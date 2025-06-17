@@ -15,7 +15,7 @@ RUN pnpm install
 COPY . .
 
 # Build client и server
-    RUN pnpm run build.server
+RUN pnpm run build.server
 
 # Експониране на порт (например 3042)
 EXPOSE 3042
