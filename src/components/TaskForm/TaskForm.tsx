@@ -72,7 +72,9 @@ export const TaskForm = component$<TaskFormProps>((props) => {
           value={(dateSignal.value.length
             ? new Date(dateSignal.value)
             : new Date()
-          ).toISOString()}
+          )
+            .toISOString()
+            .slice(0, 16)}
           onInput$={(e) =>
             (dateSignal.value = (e.target as HTMLInputElement).value)
           }

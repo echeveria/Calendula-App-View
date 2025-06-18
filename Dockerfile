@@ -16,5 +16,8 @@ COPY . .
 # Build client и server
 RUN pnpm run build.server
 
+# Експониране на порт (например 3042)
+EXPOSE 3042
+
 # Стартиране на Fastify сървъра
 CMD ["node", "server/entry.fastify"]

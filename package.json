@@ -54,5 +54,6 @@
     "fullcalendar": "^6.1.17",
     "pocketbase": "^0.26.1",
     "tailwindcss": "^4.1.7"
-  }
+  },
+  "packageManger": "pnpm@10.7.1"
 }
