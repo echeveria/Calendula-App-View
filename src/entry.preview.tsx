@@ -2,7 +2,7 @@
  * WHAT IS THIS FILE?
  *
  * It's the bundle entry point for `npm run preview`.
- * That is, serving your view built in production mode.
+ * That is, serving your app built in production mode.
  *
  * Feel free to modify this file, but don't remove it!
  *

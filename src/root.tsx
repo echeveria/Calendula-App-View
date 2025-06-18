@@ -1,7 +1,7 @@
-import { component$, isDev } from "@builder.io/qwik";
+import { component$ } from "@builder.io/qwik";
+import { isDev } from "@builder.io/qwik";
 import { QwikCityProvider, RouterOutlet } from "@builder.io/qwik-city";
 import { RouterHead } from "./components/router-head/router-head";
-import { Navigation } from "./components/Navigation";
 
 import "./global.css";
 
@@ -12,6 +12,7 @@ export default component$(() => {
    *
    * Don't remove the `<head>` and `<body>` elements.
    */
+
   return (
     <QwikCityProvider>
       <head>
@@ -25,7 +26,6 @@ export default component$(() => {
         <RouterHead />
       </head>
       <body lang="en">
-        <Navigation />
         <RouterOutlet />
       </body>
     </QwikCityProvider>

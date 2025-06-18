@@ -18,7 +18,7 @@ const { dependencies = {}, devDependencies = {} } = pkg as any as {
 errorOnDuplicatesPkgDeps(devDependencies, dependencies);
 
 /**
- * Note that Vite normally starts from `index.html` but the qwikCity plugin makes start at `src/entry.ssr.tsx.tsx` instead.
+ * Note that Vite normally starts from `index.html` but the qwikCity plugin makes start at `src/entry.ssr.tsx` instead.
  */
 export default defineConfig(({ command, mode }): UserConfig => {
   return {
@@ -50,7 +50,7 @@ export default defineConfig(({ command, mode }): UserConfig => {
     server: {
       headers: {
         // Don't cache the server response in dev mode
-        "Cache-Control": " public, max-age=31536000, immutable",
+        "Cache-Control": "public, max-age=0",
       },
     },
     preview: {
