@@ -1,4 +1,4 @@
-ARG NODE_VERSION=22.11.0
+ARG NODE_VERSION=22.11.0  AS build
 
 ################################################################################
 # Use node image for base image for all stages.
