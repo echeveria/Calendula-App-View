@@ -1,8 +1,8 @@
-ARG NODE_VERSION=22.11.0  AS build
+ARG NODE_VERSION=22.11.0 as build
 
 ################################################################################
 # Use node image for base image for all stages.
-FROM node:${NODE_VERSION}-alpine as base
+FROM node:${NODE_VERSION}-alpine as builder
  
 # Set working directory for all build stages.
 WORKDIR /usr/src/app
