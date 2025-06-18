@@ -12,14 +12,14 @@ WORKDIR /usr/src/app
 FROM base as deps
  
 # Download dependencies as a separate step to take advantage of Docker's caching.
-# Leverage a cache mount to /root/.yarn to speed up subsequent builds.
-# Leverage bind mounts to package.json and yarn.lock to avoid having to copy them
+# Leverage a cache mount to /root/.pnpm to speed up subsequent builds.
+# Leverage bind mounts to package.json and pnpm.lock to avoid having to copy them
 # into this layer.
 RUN --mount=type=bind,source=package.json,target=package.json \
-   --mount=type=bind,source=yarn.lock,target=yarn.lock \
-   --mount=type=cache,target=/root/.yarn \
-   yarn install --frozen-lockfile
- 
+    --mount=type=bind,source=pnpm-lock.yaml,target=pnpm-lock.yaml \
+    --mount=type=cache,target=/root/.pnpm-store \
+    corepack enable && pnpm install --frozen-lockfile \
+
 ################################################################################
 # Create a stage for building the application.
 FROM deps as build
@@ -28,7 +28,7 @@ FROM deps as build
 COPY . .
  
 # Run the build script.
-RUN yarn run build
+RUN pnpm run build
  
 ################################################################################
 # Create a new stage to run the application with minimal runtime dependencies
@@ -60,4 +60,4 @@ COPY --from=build /usr/src/app/server ./server
 EXPOSE 3042
  
 # Run the application.
-CMD yarn serve
+CMD pnpm serve
