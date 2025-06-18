@@ -1,4 +1,3 @@
-# База образ с Node.js
 FROM node:22
 
 WORKDIR /app
@@ -16,9 +15,6 @@ COPY . .
 
 # Build client и server
 RUN pnpm run build.server
-
-# Експониране на порт (например 3042)
-EXPOSE 3042
 
 # Стартиране на Fastify сървъра
 CMD ["node", "server/entry.fastify"]

@@ -66,14 +66,13 @@ export const TaskForm = component$<TaskFormProps>((props) => {
           <span class="label-text">Task Date</span>
         </label>
         <input
-          type="date"
+          type="datetime-local"
           id="date"
           class="input w-full"
-          value={
-            (dateSignal.value.length ? new Date(dateSignal.value) : new Date())
-              .toISOString()
-              .split("T")[0]
-          }
+          value={(dateSignal.value.length
+            ? new Date(dateSignal.value)
+            : new Date()
+          ).toISOString()}
           onInput$={(e) =>
             (dateSignal.value = (e.target as HTMLInputElement).value)
           }

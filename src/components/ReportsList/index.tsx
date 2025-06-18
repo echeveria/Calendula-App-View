@@ -1,5 +1,6 @@
 import { component$, useSignal, $, useVisibleTask$ } from "@builder.io/qwik";
 import { pb, getAuthToken, isLoggedIn } from "~/utils/pocketbase";
+import { useLocation } from "@builder.io/qwik-city";
 
 export interface ReportsListProps {
   onReportSelected?: (reportId: string) => void;
@@ -15,6 +16,8 @@ export const ReportsList = component$<ReportsListProps>(
     showActions = true,
     showCreateButton = true,
   }) => {
+    const loc = useLocation();
+    const taskId = loc.url.searchParams.get("taskId");
     const isLoading = useSignal(false);
     const isDeleting = useSignal(false);
     const reports = useSignal<any[]>([]);
@@ -31,9 +34,14 @@ export const ReportsList = component$<ReportsListProps>(
         pb.authStore.save(getAuthToken() || "", null);
 
         try {
+          const filter = taskId
+            ? { filter: `_task.id = "${taskId}"` }
+            : undefined;
+
           const response = await pb.collection("reports").getList(1, 50, {
             sort: "-created",
             expand: "_task, _task._garden",
+            ...filter,
           });
 
           function deduplicateById<T extends { id: string }>(items: T[]): T[] {

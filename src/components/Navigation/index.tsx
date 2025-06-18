@@ -71,6 +71,16 @@ export const Navigation = component$(() => {
                 <>
                   <li>
                     <a
+                      href="/gardens"
+                      class={
+                        location.url.pathname === "/gardens" ? "active" : ""
+                      }
+                    >
+                      Градини
+                    </a>
+                  </li>
+                  <li>
+                    <a
                       href="/calendar"
                       class={
                         location.url.pathname === "/calendar" ? "active" : ""
@@ -157,6 +167,14 @@ export const Navigation = component$(() => {
             </li>
           ) : (
             <>
+              <li>
+                <a
+                  href="/gardens"
+                  class={location.url.pathname === "/gardens" ? "active" : ""}
+                >
+                  Градини
+                </a>
+              </li>
               <li>
                 <a
                   href="/calendar"

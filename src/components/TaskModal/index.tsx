@@ -49,7 +49,7 @@ export const TaskModal = component$<TaskModalProps>((props) => {
           statusSignal.value = task.status || "pending";
           gardenSignal.value = task.expand?._garden.id || null;
           dateSignal.value = task.due_date
-            ? new Date(task.due_date).toISOString().split("T")[0]
+            ? new Date(task.due_date).toISOString()
             : "";
         }
       } catch (error) {
@@ -163,7 +163,14 @@ export const TaskModal = component$<TaskModalProps>((props) => {
             <span>{errorSignal.value}</span>
           </div>
         )}
-        <div class="modal-title">aaa</div>
+        <div class="modal-title flex justify-end">
+          <a href={`/reports/?taskId=${id}`} class="btn">
+            Рапорти
+            <div class="badge badge-sm badge-secondary">
+              {totalReportsSignal.value || 0}
+            </div>
+          </a>
+        </div>
         <TaskForm
           handleSubmit={handleSubmit}
           handleDelete={deleteTask}
