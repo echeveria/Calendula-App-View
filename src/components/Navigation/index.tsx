@@ -64,10 +64,31 @@ export const Navigation = component$(() => {
                   href="/"
                   class={location.url.pathname === "/" ? "active" : ""}
                 >
-                  Home
+                  Начало
                 </a>
               </li>
               {!isLoggedIn.value ? (
+                <>
+                  <li>
+                    <a
+                      href="/login"
+                      class={location.url.pathname === "/login" ? "active" : ""}
+                    >
+                      Вход
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="/register"
+                      class={
+                        location.url.pathname === "/register" ? "active" : ""
+                      }
+                    >
+                      Регистрация
+                    </a>
+                  </li>
+                </>
+              ) : (
                 <>
                   <li>
                     <a
@@ -86,30 +107,9 @@ export const Navigation = component$(() => {
                         location.url.pathname === "/calendar" ? "active" : ""
                       }
                     >
-                      Calendar
+                      Календар
                     </a>
                   </li>
-                  <li>
-                    <a
-                      href="/login"
-                      class={location.url.pathname === "/login" ? "active" : ""}
-                    >
-                      Login
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="/register"
-                      class={
-                        location.url.pathname === "/register" ? "active" : ""
-                      }
-                    >
-                      Register
-                    </a>
-                  </li>
-                </>
-              ) : (
-                <>
                   <li>
                     <a
                       href="/tasks"
@@ -119,7 +119,7 @@ export const Navigation = component$(() => {
                           : ""
                       }
                     >
-                      Tasks
+                      Задачи
                     </a>
                   </li>
                   <li>
@@ -131,12 +131,12 @@ export const Navigation = component$(() => {
                           : ""
                       }
                     >
-                      Reports
+                      Рапорти
                     </a>
                   </li>
                   <li>
                     <a href="#" onClick$={handleLogout}>
-                      Logout
+                      Изход
                     </a>
                   </li>
                 </>
@@ -146,25 +146,35 @@ export const Navigation = component$(() => {
         </div>
         <a href="/" class="flex items-center text-xl">
           <img src={logo} width="50" height="50" />
-          ГрадинАп
+          ДворЧек
         </a>
       </div>
       <div class="navbar-center hidden lg:flex">
         <ul class="menu menu-horizontal px-1">
           <li>
             <a href="/" class={location.url.pathname === "/" ? "active" : ""}>
-              Home
+              Начало
             </a>
           </li>
           {!isLoggedIn.value ? (
-            <li>
-              <a
-                href="/login"
-                class={location.url.pathname === "/login" ? "active" : ""}
-              >
-                Login
-              </a>
-            </li>
+            <>
+              <li>
+                <a
+                  href="/login"
+                  class={location.url.pathname === "/login" ? "active" : ""}
+                >
+                  Вход
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/register"
+                  class={location.url.pathname === "/register" ? "active" : ""}
+                >
+                  Регистрация
+                </a>
+              </li>
+            </>
           ) : (
             <>
               <li>
@@ -180,7 +190,7 @@ export const Navigation = component$(() => {
                   href="/calendar"
                   class={location.url.pathname === "/calendar" ? "active" : ""}
                 >
-                  Calendar
+                  Календар
                 </a>
               </li>
               <li>
@@ -190,7 +200,7 @@ export const Navigation = component$(() => {
                     location.url.pathname.startsWith("/tasks") ? "active" : ""
                   }
                 >
-                  Tasks
+                  Задачи
                 </a>
               </li>
               <li>
@@ -200,12 +210,12 @@ export const Navigation = component$(() => {
                     location.url.pathname.startsWith("/reports") ? "active" : ""
                   }
                 >
-                  Reports
+                  Рапорти
                 </a>
               </li>
               <li>
                 <a href="#" onClick$={handleLogout}>
-                  Logout
+                  Изход
                 </a>
               </li>
             </>
@@ -232,15 +242,10 @@ export const Navigation = component$(() => {
               class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
             >
               <li>
-                <a href="#">Profile</a>
+                <a href="#">Профил</a>
               </li>
               <li>
-                <a href="#">Settings</a>
-              </li>
-              <li>
-                <a href="#" onClick$={handleLogout}>
-                  Logout
-                </a>
+                <a href="#">Насторйки</a>
               </li>
             </ul>
           </div>
