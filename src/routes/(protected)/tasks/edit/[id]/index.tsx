@@ -1,4 +1,10 @@
-import { component$, useSignal, $, useVisibleTask$ } from "@builder.io/qwik";
+import {
+  component$,
+  useSignal,
+  $,
+  useVisibleTask$,
+  NoSerialize,
+} from "@builder.io/qwik";
 import {
   useNavigate,
   useLocation,
@@ -6,6 +12,7 @@ import {
 } from "@builder.io/qwik-city";
 import { pb, getAuthToken } from "~/utils/pocketbase";
 import { TaskForm } from "~/components/TaskForm/TaskForm";
+import { handleImageDelete, handleImageUpload } from "~/utils/views";
 
 export default component$(() => {
   const navigate = useNavigate();
@@ -20,6 +27,8 @@ export default component$(() => {
   const errorSignal = useSignal("");
   const isLoading = useSignal(false);
   const isLoadingTask = useSignal(true);
+  const imagesPreviewSignal = useSignal<NoSerialize<string[]>>(undefined);
+  const imagesSignal = useSignal<NoSerialize<File[]>>(undefined);
 
   // Function to load task data from PocketBase
   const loadTask = $(async () => {
@@ -40,6 +49,10 @@ export default component$(() => {
         statusSignal.value = data.status || "pending";
         dateSignal.value = data.due_date || new Date();
         titleSignal.value = data.expand?._garden.title;
+        imagesSignal.value = data.images || [];
+        imagesPreviewSignal.value = data.images.map((img: any) =>
+          pb.files.getURL(data, img),
+        );
 
         // Set task config if it exists
         if (data._garden) {
@@ -79,6 +92,7 @@ export default component$(() => {
         info: infoSignal.value,
         status: statusSignal.value,
         due_date: new Date(dateSignal.value),
+        images: imagesSignal.value,
       };
 
       if (infoSignal.value) {
@@ -149,9 +163,16 @@ export default component$(() => {
                 dateSignal={dateSignal}
                 isLoading={isLoading}
                 infoSignal={infoSignal}
-                title={titleSignal.value || "New Task"}
-                btnTitle="Update Task"
+                title={titleSignal.value || "Зова задача"}
+                btnTitle="Запзи"
                 id={taskId}
+                handleImageUpload={$((files: File[]) =>
+                  handleImageUpload(files, imagesSignal, imagesPreviewSignal),
+                )}
+                images={imagesPreviewSignal.value}
+                handleImageDelete={$((index: number) =>
+                  handleImageDelete(index, imagesSignal, imagesPreviewSignal),
+                )}
               />
               <div class="text-center mt-4">
                 <a href="/tasks" class="link link-primary">

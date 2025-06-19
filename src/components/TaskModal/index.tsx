@@ -1,6 +1,13 @@
-import { component$, useSignal, $, useVisibleTask$ } from "@builder.io/qwik";
+import {
+  component$,
+  useSignal,
+  $,
+  useVisibleTask$,
+  NoSerialize,
+} from "@builder.io/qwik";
 import { TaskForm } from "~/components/TaskForm/TaskForm";
 import { pb, getAuthToken, getUserInfo } from "~/utils/pocketbase";
+import { handleImageDelete, handleImageUpload } from "~/utils/views";
 
 export interface TaskModalProps {
   isOpen: boolean;
@@ -20,6 +27,8 @@ export const TaskModal = component$<TaskModalProps>((props) => {
   const errorSignal = useSignal("");
   const isLoading = useSignal(false);
   const totalReportsSignal = useSignal<number | undefined>(undefined);
+  const imagesPreviewSignal = useSignal<NoSerialize<string[]>>(undefined);
+  const imagesSignal = useSignal<NoSerialize<File[]>>(undefined);
 
   // Check if user is logged in and load task data if editing
   useVisibleTask$(async ({ track }) => {
@@ -43,6 +52,7 @@ export const TaskModal = component$<TaskModalProps>((props) => {
           filter: `_task.id = "${task.id}"`,
         });
         totalReportsSignal.value = reports.totalItems;
+
         if (task) {
           nameSignal.value = task.expand?._garden.title || "";
           infoSignal.value = task.info || "";
@@ -51,6 +61,10 @@ export const TaskModal = component$<TaskModalProps>((props) => {
           dateSignal.value = task.due_date
             ? new Date(task.due_date).toISOString()
             : "";
+          imagesSignal.value = task.images || [];
+          imagesPreviewSignal.value = task.images.map((img: any) =>
+            pb.files.getURL(task, img),
+          );
         }
       } catch (error) {
         console.error("Error loading task:", error);
@@ -86,6 +100,7 @@ export const TaskModal = component$<TaskModalProps>((props) => {
         due_date: dateSignal.value ? new Date(dateSignal.value) : new Date(),
         _garden: gardenSignal.value,
         _created_by: currentUser.id,
+        images: imagesSignal.value,
       };
 
       // Set the auth token for the request
@@ -179,10 +194,17 @@ export const TaskModal = component$<TaskModalProps>((props) => {
           dateSignal={dateSignal}
           isLoading={isLoading}
           infoSignal={infoSignal}
-          btnTitle={id ? "Edit Task" : "New Task"}
-          title={nameSignal.value || "New Task"}
+          btnTitle={"Запази"}
+          title={nameSignal.value || "Нова Задача"}
           id={id}
           totalReports={totalReportsSignal.value}
+          handleImageUpload={$((files: File[]) =>
+            handleImageUpload(files, imagesSignal, imagesPreviewSignal),
+          )}
+          images={imagesPreviewSignal.value}
+          handleImageDelete={$((index: number) =>
+            handleImageDelete(index, imagesSignal, imagesPreviewSignal),
+          )}
         />
         <div class="modal-action">
           <button class="btn" onClick$={() => onClose()}>

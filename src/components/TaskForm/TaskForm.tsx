@@ -1,10 +1,13 @@
-import { $, component$, Signal } from "@builder.io/qwik";
+import { $, component$, Signal, useSignal } from "@builder.io/qwik";
 import { GardensSelector } from "~/components/GardensSelector";
 import { taskStatusValue } from "~/utils/views";
 
 export interface TaskFormProps {
   handleSubmit: () => void;
   handleDelete?: () => void;
+  handleImageUpload: (files: File[]) => void;
+  handleImageDelete: (index: number) => void;
+  images?: string[];
   gardenSignal: Signal<string | null>;
   statusSignal: Signal<string>;
   dateSignal: Signal<string>;
@@ -29,9 +32,31 @@ export const TaskForm = component$<TaskFormProps>((props) => {
     btnTitle,
     id,
     totalReports,
+    handleImageDelete,
+    handleImageUpload,
+    images,
   } = props;
 
+  const deletable = useSignal(false);
+
   const onSelectionChange = $((id: string) => (props.gardenSignal.value = id));
+
+  // Handle image upload
+  const onImageUpload = $((e: Event) => {
+    const input = e.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const newFiles = Array.from(input.files);
+      if (handleImageUpload) {
+        handleImageUpload(newFiles);
+      }
+      deletable.value = true;
+    }
+  });
+
+  // Handle image deletion
+  const onImageDelete = $((index: number) => {
+    handleImageDelete(index);
+  });
 
   return (
     <form preventdefault:submit onSubmit$={handleSubmit} class="space-y-4">
@@ -95,6 +120,63 @@ export const TaskForm = component$<TaskFormProps>((props) => {
           required
         ></textarea>
       </div>
+
+      {/* Image Upload Section */}
+      <div class="form-control">
+        <label class="label" for="images">
+          <span class="label-text">Качи снимки</span>
+        </label>
+        <input
+          type="file"
+          id="images"
+          class="file-input file-input-bordered w-full"
+          accept="image/*"
+          multiple
+          onChange$={onImageUpload}
+        />
+      </div>
+
+      {/* Image Preview Section */}
+      {images && images.length > 0 && (
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Преглед</span>
+          </label>
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {images.map((preview, index) => (
+              <div key={index} class="relative">
+                <img
+                  src={preview}
+                  alt={`Preview ${index + 1}`}
+                  class="w-full h-32 object-cover rounded-lg"
+                />
+                {deletable.value && (
+                  <button
+                    type="button"
+                    class="btn btn-circle btn-error btn-sm absolute top-2 right-2"
+                    onClick$={() => onImageDelete(index)}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
       <div class="form-control mt-6">
         <div class="join flex justify-between">
           <button

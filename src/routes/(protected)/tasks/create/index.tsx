@@ -1,4 +1,4 @@
-import { component$, useSignal, $ } from "@builder.io/qwik";
+import { component$, useSignal, $, NoSerialize } from "@builder.io/qwik";
 import {
   useNavigate,
   type DocumentHead,
@@ -6,6 +6,7 @@ import {
 } from "@builder.io/qwik-city";
 import { pb, getAuthToken, getUserInfo } from "~/utils/pocketbase";
 import { TaskForm } from "~/components/TaskForm/TaskForm";
+import { handleImageDelete, handleImageUpload } from "~/utils/views";
 
 export default component$(() => {
   const navigate = useNavigate();
@@ -18,6 +19,9 @@ export default component$(() => {
   const dateSignal = useSignal("");
   const errorSignal = useSignal("");
   const isLoading = useSignal(false);
+
+  const imagesPreviewSignal = useSignal<NoSerialize<string[]>>(undefined);
+  const imagesSignal = useSignal<NoSerialize<File[]>>(undefined);
 
   const handleSubmit = $(async () => {
     errorSignal.value = "";
@@ -40,6 +44,7 @@ export default component$(() => {
         _garden: taskConfigSignal.value,
         due_date: new Date(dateSignal.value),
         _created_by: currentUser.id,
+        images: imagesSignal.value,
       };
 
       // Add parent (task_config) if selected
@@ -105,8 +110,15 @@ export default component$(() => {
               dateSignal={dateSignal}
               isLoading={isLoading}
               infoSignal={infoSignal}
-              btnTitle="Create Task"
-              title="New Task"
+              btnTitle="Запазиа"
+              title="Нова Задача"
+              handleImageUpload={$((files: File[]) =>
+                handleImageUpload(files, imagesSignal, imagesPreviewSignal),
+              )}
+              images={imagesPreviewSignal.value}
+              handleImageDelete={$((index: number) =>
+                handleImageDelete(index, imagesSignal, imagesPreviewSignal),
+              )}
             />
 
             <div class="text-center mt-4">
