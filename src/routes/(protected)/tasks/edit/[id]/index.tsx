@@ -125,7 +125,7 @@ export default component$(() => {
   return (
     <div class="min-h-screen bg-base-200 p-4">
       <div class="max-w-md mx-auto">
-        <h1 class="text-3xl font-bold mb-6">Edit Task</h1>
+        <h1 class="text-3xl font-bold mb-6">Редакция</h1>
 
         {errorSignal.value && (
           <div class="alert alert-error mb-4">
@@ -164,7 +164,7 @@ export default component$(() => {
                 isLoading={isLoading}
                 infoSignal={infoSignal}
                 title={titleSignal.value || "Зова задача"}
-                btnTitle="Запзи"
+                btnTitle="Запази"
                 id={taskId}
                 handleImageUpload={$((files: File[]) =>
                   handleImageUpload(files, imagesSignal, imagesPreviewSignal),
@@ -188,7 +188,7 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "Edit Task",
+  title: "Редакция",
   meta: [
     {
       name: "description",

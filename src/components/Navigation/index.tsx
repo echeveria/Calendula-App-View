@@ -62,7 +62,7 @@ export const Navigation = component$(() => {
               <li>
                 <a
                   href="/"
-                  class={location.url.pathname === "/" ? "active" : ""}
+                  class={location.url.pathname === "/" ? "menu-active" : ""}
                 >
                   Начало
                 </a>
@@ -72,7 +72,9 @@ export const Navigation = component$(() => {
                   <li>
                     <a
                       href="/login"
-                      class={location.url.pathname === "/login" ? "active" : ""}
+                      class={
+                        location.url.pathname === "/login/" ? "menu-active" : ""
+                      }
                     >
                       Вход
                     </a>
@@ -81,7 +83,9 @@ export const Navigation = component$(() => {
                     <a
                       href="/register"
                       class={
-                        location.url.pathname === "/register" ? "active" : ""
+                        location.url.pathname === "/register/"
+                          ? "menu-active"
+                          : ""
                       }
                     >
                       Регистрация
@@ -94,7 +98,9 @@ export const Navigation = component$(() => {
                     <a
                       href="/gardens"
                       class={
-                        location.url.pathname === "/gardens" ? "active" : ""
+                        location.url.pathname === "/gardens/"
+                          ? "menu-active"
+                          : ""
                       }
                     >
                       Градини
@@ -104,7 +110,9 @@ export const Navigation = component$(() => {
                     <a
                       href="/calendar"
                       class={
-                        location.url.pathname === "/calendar" ? "active" : ""
+                        location.url.pathname === "/calendar/"
+                          ? "menu-active"
+                          : ""
                       }
                     >
                       Календар
@@ -114,8 +122,8 @@ export const Navigation = component$(() => {
                     <a
                       href="/tasks"
                       class={
-                        location.url.pathname.startsWith("/tasks")
-                          ? "active"
+                        location.url.pathname.startsWith("/tasks/")
+                          ? "menu-active"
                           : ""
                       }
                     >
@@ -126,8 +134,8 @@ export const Navigation = component$(() => {
                     <a
                       href="/reports"
                       class={
-                        location.url.pathname.startsWith("/reports")
-                          ? "active"
+                        location.url.pathname.startsWith("/reports/")
+                          ? "menu-active"
                           : ""
                       }
                     >
@@ -152,7 +160,10 @@ export const Navigation = component$(() => {
       <div class="navbar-center hidden lg:flex">
         <ul class="menu menu-horizontal px-1">
           <li>
-            <a href="/" class={location.url.pathname === "/" ? "active" : ""}>
+            <a
+              href="/"
+              class={location.url.pathname === "/" ? "menu-active" : ""}
+            >
               Начало
             </a>
           </li>
@@ -161,7 +172,9 @@ export const Navigation = component$(() => {
               <li>
                 <a
                   href="/login"
-                  class={location.url.pathname === "/login" ? "active" : ""}
+                  class={
+                    location.url.pathname === "/login/" ? "menu-active" : ""
+                  }
                 >
                   Вход
                 </a>
@@ -169,7 +182,9 @@ export const Navigation = component$(() => {
               <li>
                 <a
                   href="/register"
-                  class={location.url.pathname === "/register" ? "active" : ""}
+                  class={
+                    location.url.pathname === "/register/" ? "menu-active" : ""
+                  }
                 >
                   Регистрация
                 </a>
@@ -180,7 +195,9 @@ export const Navigation = component$(() => {
               <li>
                 <a
                   href="/gardens"
-                  class={location.url.pathname === "/gardens" ? "active" : ""}
+                  class={
+                    location.url.pathname === "/gardens/" ? "menu-active" : ""
+                  }
                 >
                   Градини
                 </a>
@@ -188,7 +205,9 @@ export const Navigation = component$(() => {
               <li>
                 <a
                   href="/calendar"
-                  class={location.url.pathname === "/calendar" ? "active" : ""}
+                  class={
+                    location.url.pathname === "/calendar/" ? "menu-active" : ""
+                  }
                 >
                   Календар
                 </a>
@@ -197,7 +216,9 @@ export const Navigation = component$(() => {
                 <a
                   href="/tasks"
                   class={
-                    location.url.pathname.startsWith("/tasks") ? "active" : ""
+                    location.url.pathname.startsWith("/tasks/")
+                      ? "menu-active"
+                      : ""
                   }
                 >
                   Задачи
@@ -207,7 +228,9 @@ export const Navigation = component$(() => {
                 <a
                   href="/reports"
                   class={
-                    location.url.pathname.startsWith("/reports") ? "active" : ""
+                    location.url.pathname.startsWith("/reports/")
+                      ? "menu-active"
+                      : ""
                   }
                 >
                   Рапорти

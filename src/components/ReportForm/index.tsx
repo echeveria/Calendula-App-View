@@ -28,7 +28,7 @@ export const ReportForm = component$<ReportFormProps>((props) => {
       <h3 class="font-bold text-lg mb-4">{title}</h3>
       <div class="form-control">
         <label class="label" for="title">
-          <span class="label-text">Report Title</span>
+          <span class="label-text">Заглавие</span>
         </label>
         <input
           type="text"
@@ -38,13 +38,13 @@ export const ReportForm = component$<ReportFormProps>((props) => {
           onInput$={(e) =>
             (titleSignal.value = (e.target as HTMLInputElement).value)
           }
-          placeholder="Enter report title..."
+          placeholder="Добавете заглавие..."
           required
         />
       </div>
       <div class="form-control">
         <label class="label" for="content">
-          <span class="label-text">Report Content</span>
+          <span class="label-text">Съдържание</span>
         </label>
         <textarea
           id="content"
@@ -53,7 +53,7 @@ export const ReportForm = component$<ReportFormProps>((props) => {
           onInput$={(e) =>
             (contentSignal.value = (e.target as HTMLTextAreaElement).value)
           }
-          placeholder="Enter report content..."
+          placeholder="Въведете съдържание..."
           required
         ></textarea>
       </div>
@@ -64,11 +64,11 @@ export const ReportForm = component$<ReportFormProps>((props) => {
             class={`btn btn-primary ${isLoading.value ? "loading" : ""}`}
             disabled={isLoading.value}
           >
-            {isLoading.value ? "Saving..." : btnTitle}
+            {isLoading.value ? "Запазване..." : btnTitle}
           </button>
           {id && (
             <button class="btn btn-error" onClick$={handleDelete}>
-              Delete
+              Изтрий
             </button>
           )}
         </div>

@@ -36,7 +36,7 @@ export default component$(() => {
 
   return (
     <div class="container mx-auto p-4">
-      <h1 class="text-2xl font-bold mb-6">Gardens</h1>
+      <h1 class="text-2xl font-bold mb-6">Градини</h1>
 
       {isLoading.value && (
         <div class="flex justify-center items-center p-8">
@@ -49,7 +49,7 @@ export default component$(() => {
       )}
 
       {!isLoading.value && gardensSignal.value.length === 0 && (
-        <div class="alert alert-info">No gardens found.</div>
+        <div class="alert alert-info">Няма намерени градини.</div>
       )}
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -58,13 +58,13 @@ export default component$(() => {
             <figure>
               {garden.photos && garden.photos.length > 0 ? (
                 <img
-                  src={`${pb.baseUrl}/api/files/${garden.collectionId}/${garden.id}/${garden.photos[0]}`}
+                  src={`${pb.baseURL}/api/files/${garden.collectionId}/${garden.id}/${garden.photos[0]}`}
                   alt={garden.title}
                   class="h-48 w-full object-cover"
                 />
               ) : (
                 <div class="h-48 w-full bg-gray-200 flex items-center justify-center">
-                  <span class="text-gray-400">No image</span>
+                  <span class="text-gray-400">Няма снимка</span>
                 </div>
               )}
             </figure>
@@ -76,7 +76,7 @@ export default component$(() => {
                   href={`/gardens/details/${garden.id}`}
                   class="btn btn-primary"
                 >
-                  Details
+                  Детайли
                 </a>
               </div>
             </div>

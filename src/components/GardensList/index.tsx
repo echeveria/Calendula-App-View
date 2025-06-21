@@ -1,5 +1,5 @@
 import { component$, useSignal, $, useVisibleTask$ } from "@builder.io/qwik";
-import { pb, getAuthToken, isLoggedIn } from "~/utils/pocketbase";
+import { pb, getAuthToken } from "~/utils/pocketbase";
 
 export interface GardensListProps {
   onGardenSelected?: (gardenId: string) => void;
@@ -27,11 +27,6 @@ export const GardensList = component$<GardensListProps>(
       errorSignal.value = "";
 
       try {
-        if (!isLoggedIn()) {
-          errorSignal.value = "Authentication required";
-          return;
-        }
-
         // Set the auth token for the request
         pb.authStore.save(getAuthToken() || "", null);
 
@@ -77,11 +72,6 @@ export const GardensList = component$<GardensListProps>(
       successSignal.value = "";
 
       try {
-        if (!isLoggedIn()) {
-          errorSignal.value = "Authentication required";
-          return;
-        }
-
         // Set the auth token for the request
         pb.authStore.save(getAuthToken() || "", null);
 
@@ -105,7 +95,7 @@ export const GardensList = component$<GardensListProps>(
     return (
       <div class="card bg-base-100 shadow-xl mb-6">
         <div class="card-body">
-          <h2 class="card-title">Gardens</h2>
+          <h2 class="card-title">Градини</h2>
 
           {errorSignal.value && (
             <div class="alert alert-error mb-4">
@@ -151,7 +141,7 @@ export const GardensList = component$<GardensListProps>(
             </div>
           ) : gardens.value.length === 0 ? (
             <div class="text-center p-4">
-              <p>No gardens found. Create your first garden!</p>
+              <p>Няма добавени градини. Създайте първата!</p>
             </div>
           ) : (
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -174,7 +164,7 @@ export const GardensList = component$<GardensListProps>(
                         href={`/gardens/details/${garden.id}`}
                         class="btn btn-primary btn-sm"
                       >
-                        Details
+                        Детайли
                       </a>
                       {showActions && (
                         <>
@@ -182,7 +172,7 @@ export const GardensList = component$<GardensListProps>(
                             href={`/gardens/edit/${garden.id}`}
                             class="btn btn-sm btn-secondary"
                           >
-                            Edit
+                            Редактирай
                           </a>
                           <button
                             class={`btn btn-sm btn-error ${
@@ -191,7 +181,7 @@ export const GardensList = component$<GardensListProps>(
                             onClick$={() => deleteGarden(garden.id)}
                             disabled={isDeleting.value}
                           >
-                            Delete
+                            Изтрий
                           </button>
                         </>
                       )}
@@ -205,7 +195,7 @@ export const GardensList = component$<GardensListProps>(
           {showCreateButton && (
             <div class="card-actions justify-end mt-4">
               <a href="/gardens/create" class="btn btn-primary">
-                Create New Garden
+                Създай нова
               </a>
             </div>
           )}

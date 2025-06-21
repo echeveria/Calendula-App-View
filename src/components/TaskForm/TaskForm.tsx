@@ -69,7 +69,7 @@ export const TaskForm = component$<TaskFormProps>((props) => {
       </div>
       <div class="form-control">
         <label class="label" for="status">
-          <span class="label-text">Status</span>
+          <span class="label-text">Статус</span>
         </label>
         <select
           id="status"
@@ -88,7 +88,7 @@ export const TaskForm = component$<TaskFormProps>((props) => {
       </div>
       <div class="form-control">
         <label class="label" for="date">
-          <span class="label-text">Task Date</span>
+          <span class="label-text">Дата на изпълнение</span>
         </label>
         <input
           type="datetime-local"
@@ -107,7 +107,7 @@ export const TaskForm = component$<TaskFormProps>((props) => {
       </div>
       <div class="form-control">
         <label class="label" for="info">
-          <span class="label-text">Task Information</span>
+          <span class="label-text">Информация</span>
         </label>
         <textarea
           id="info"
@@ -116,7 +116,7 @@ export const TaskForm = component$<TaskFormProps>((props) => {
           onInput$={(e) =>
             (infoSignal.value = (e.target as HTMLTextAreaElement).value)
           }
-          placeholder="Enter task details..."
+          placeholder="Детайли на задачата..."
           required
         ></textarea>
       </div>
@@ -193,13 +193,13 @@ export const TaskForm = component$<TaskFormProps>((props) => {
               </span>
             )}
             <a href={`/reports/create/${id}`} class="btn btn-accent">
-              Report
+              Рапорт
             </a>
           </div>
-          <button class="btn btn-info">View</button>
+          {/*          <button class="btn btn-info">Преглед</button>*/}
           {id && (
             <button class="btn btn-error" onClick$={handleDelete}>
-              Delete
+              Изтрий
             </button>
           )}
         </div>

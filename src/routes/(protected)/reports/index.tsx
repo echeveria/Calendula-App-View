@@ -20,7 +20,7 @@ export default component$(() => {
   return (
     <div class="min-h-screen bg-base-200 p-4">
       <div class="max-w-4xl mx-auto">
-        <h1 class="text-3xl font-bold mb-6">Report Management</h1>
+        <h1 class="text-3xl font-bold mb-6">Рапорт мениджър</h1>
 
         {successSignal.value && (
           <div class="alert alert-success mb-4">
@@ -53,7 +53,7 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "Report Management",
+  title: "Рапорт мениджър",
   meta: [
     {
       name: "description",

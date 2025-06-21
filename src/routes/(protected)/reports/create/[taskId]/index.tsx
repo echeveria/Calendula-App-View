@@ -104,7 +104,7 @@ export default component$(() => {
             />
             <div class="text-center mt-4">
               <a href="/reports" class="link link-primary">
-                Back to Reports
+                Назад към рапорти
               </a>
             </div>
           </div>

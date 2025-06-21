@@ -109,7 +109,7 @@ export const ReportsList = component$<ReportsListProps>(
     return (
       <div class="card bg-base-100 shadow-xl mb-6">
         <div class="card-body">
-          <h2 class="card-title">Reports</h2>
+          <h2 class="card-title">Рапорти</h2>
 
           {errorSignal.value && (
             <div class="alert alert-error mb-4">
@@ -155,17 +155,17 @@ export const ReportsList = component$<ReportsListProps>(
             </div>
           ) : reports.value.length === 0 ? (
             <div class="text-center p-4">
-              <p>No reports found. Create your first report!</p>
+              <p>Няма рапорти. Създайте първият!</p>
             </div>
           ) : (
             <div class="overflow-x-auto">
               <table class="table w-full">
                 <thead>
                   <tr>
-                    <th>Title</th>
-                    <th>Task:Date</th>
-                    <th>Created At</th>
-                    {showActions && <th>Actions</th>}
+                    <th>Заглавие</th>
+                    <th>Задача:Дата</th>
+                    <th>Създаден на</th>
+                    {showActions && <th>Действия</th>}
                   </tr>
                 </thead>
                 <tbody>
