@@ -9,6 +9,8 @@ export interface ReportsListProps {
   showCreateButton?: boolean;
 }
 
+type FilterType = "all" | "old" | "today" | "not_read";
+
 export const ReportsList = component$<ReportsListProps>(
   ({
     onReportSelected = () => {},
@@ -23,6 +25,7 @@ export const ReportsList = component$<ReportsListProps>(
     const reports = useSignal<any[]>([]);
     const errorSignal = useSignal("");
     const successSignal = useSignal("");
+    const currentFilter = useSignal<FilterType>("all");
 
     // Function to load reports from PocketBase
     const loadReports = $(async () => {
@@ -34,9 +37,41 @@ export const ReportsList = component$<ReportsListProps>(
         pb.authStore.save(getAuthToken() || "", null);
 
         try {
-          const filter = taskId
-            ? { filter: `_task.id = "${taskId}"` }
-            : undefined;
+          let filterStr = "";
+
+          // Base filter for task ID if provided
+          if (taskId) {
+            filterStr = `_task.id = "${taskId}"`;
+          }
+
+          // Apply additional filters based on currentFilter
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          const todayISOString = today.toISOString();
+
+          switch (currentFilter.value) {
+            case "today":
+              filterStr = filterStr
+                ? `${filterStr} && created >= "${todayISOString}"`
+                : `created >= "${todayISOString}"`;
+              break;
+            case "old":
+              filterStr = filterStr
+                ? `${filterStr} && created < "${todayISOString}"`
+                : `created < "${todayISOString}"`;
+              break;
+            case "not_read":
+              filterStr = filterStr
+                ? `${filterStr} && marked_as_read = false`
+                : `marked_as_read = false`;
+              break;
+            case "all":
+            default:
+              // No additional filter for "all"
+              break;
+          }
+
+          const filter = filterStr ? { filter: filterStr } : undefined;
 
           const response = await pb.collection("reports").getList(1, 50, {
             sort: "-created",
@@ -63,6 +98,12 @@ export const ReportsList = component$<ReportsListProps>(
       } finally {
         isLoading.value = false;
       }
+    });
+
+    // Function to handle filter changes
+    const handleFilterChange = $((filter: FilterType) => {
+      currentFilter.value = filter;
+      loadReports();
     });
 
     // Load reports when component mounts
@@ -111,6 +152,33 @@ export const ReportsList = component$<ReportsListProps>(
         <div class="card-body">
           <h2 class="card-title">Рапорти</h2>
 
+          <div class="flex flex-wrap gap-2 my-4">
+            <button
+              class={`btn btn-sm ${currentFilter.value === "all" ? "btn-primary" : "btn-outline"}`}
+              onClick$={() => handleFilterChange("all")}
+            >
+              Всички
+            </button>
+            <button
+              class={`btn btn-sm ${currentFilter.value === "old" ? "btn-primary" : "btn-outline"}`}
+              onClick$={() => handleFilterChange("old")}
+            >
+              Стари
+            </button>
+            <button
+              class={`btn btn-sm ${currentFilter.value === "today" ? "btn-primary" : "btn-outline"}`}
+              onClick$={() => handleFilterChange("today")}
+            >
+              Днешни
+            </button>
+            <button
+              class={`btn btn-sm ${currentFilter.value === "not_read" ? "btn-primary" : "btn-outline"}`}
+              onClick$={() => handleFilterChange("not_read")}
+            >
+              Непрочетени
+            </button>
+          </div>
+
           {errorSignal.value && (
             <div class="alert alert-error mb-4">
               <svg
@@ -155,7 +223,12 @@ export const ReportsList = component$<ReportsListProps>(
             </div>
           ) : reports.value.length === 0 ? (
             <div class="text-center p-4">
-              <p>Няма рапорти. Създайте първият!</p>
+              <p>
+                Няма рапорти.{" "}
+                <a href="/calendar" class="link">
+                  Създайте първият!
+                </a>
+              </p>
             </div>
           ) : (
             <div class="overflow-x-auto">
@@ -178,15 +251,10 @@ export const ReportsList = component$<ReportsListProps>(
                       <td>{report.title}</td>
                       <td>
                         {Object.keys(report.expand).length > 0 && (
-                          <a
-                            class="link"
-                            href={`/tasks/edit/${report.expand._task.id}`}
-                          >
+                          <a class="link" href={`/tasks/edit/${report.expand._task.id}`}>
                             {report.expand._task.expand._garden.title}
                             {":  "}
-                            {new Date(
-                              report.expand._task.due_date,
-                            ).toLocaleDateString()}
+                            {new Date(report.expand._task.due_date).toLocaleDateString()}
                           </a>
                         )}
                       </td>
@@ -194,10 +262,7 @@ export const ReportsList = component$<ReportsListProps>(
                       {showActions && (
                         <td onClick$={(e) => e.stopPropagation()}>
                           <div class="flex space-x-2">
-                            <a
-                              href={`/reports/edit/${report.id}`}
-                              class="btn btn-sm btn-primary"
-                            >
+                            <a href={`/reports/edit/${report.id}`} class="btn btn-sm btn-primary">
                               Edit
                             </a>
                             <button
@@ -227,5 +292,5 @@ export const ReportsList = component$<ReportsListProps>(
         </div>
       </div>
     );
-  },
+  }
 );

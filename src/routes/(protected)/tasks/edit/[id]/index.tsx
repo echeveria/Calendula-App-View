@@ -1,15 +1,5 @@
-import {
-  component$,
-  useSignal,
-  $,
-  useVisibleTask$,
-  NoSerialize,
-} from "@builder.io/qwik";
-import {
-  useNavigate,
-  useLocation,
-  type DocumentHead,
-} from "@builder.io/qwik-city";
+import { component$, useSignal, $, useVisibleTask$, NoSerialize } from "@builder.io/qwik";
+import { useNavigate, useLocation, type DocumentHead } from "@builder.io/qwik-city";
 import { pb, getAuthToken } from "~/utils/pocketbase";
 import { TaskForm } from "~/components/TaskForm/TaskForm";
 import { handleImageDelete, handleImageUpload } from "~/utils/views";
@@ -40,9 +30,7 @@ export default component$(() => {
       pb.authStore.save(getAuthToken() || "", null);
 
       try {
-        const data = await pb
-          .collection("tasks")
-          .getOne(taskId, { expand: "_garden" });
+        const data = await pb.collection("tasks").getOne(taskId, { expand: "_garden" });
 
         // Populate form with task data
         infoSignal.value = data.info || "";
@@ -50,9 +38,7 @@ export default component$(() => {
         dateSignal.value = data.due_date || new Date();
         titleSignal.value = data.expand?._garden.title;
         imagesSignal.value = data.images || [];
-        imagesPreviewSignal.value = data.images.map((img: any) =>
-          pb.files.getURL(data, img),
-        );
+        imagesPreviewSignal.value = data.images.map((img: any) => pb.files.getURL(data, img));
 
         // Set task config if it exists
         if (data._garden) {
@@ -167,16 +153,16 @@ export default component$(() => {
                 btnTitle="Запази"
                 id={taskId}
                 handleImageUpload={$((files: File[]) =>
-                  handleImageUpload(files, imagesSignal, imagesPreviewSignal),
+                  handleImageUpload(files, imagesSignal, imagesPreviewSignal)
                 )}
                 images={imagesPreviewSignal.value}
                 handleImageDelete={$((index: number) =>
-                  handleImageDelete(index, imagesSignal, imagesPreviewSignal),
+                  handleImageDelete(index, imagesSignal, imagesPreviewSignal)
                 )}
               />
               <div class="text-center mt-4">
                 <a href="/tasks" class="link link-primary">
-                  Back to Tasks
+                  Обратно в Задачи
                 </a>
               </div>
             </div>

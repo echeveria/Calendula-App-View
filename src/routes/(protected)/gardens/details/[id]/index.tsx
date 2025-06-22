@@ -94,7 +94,6 @@ export default component$(() => {
           },
           headerToolbar: {
             left: "title",
-            center: "prev,next",
             right: "dayGridMonth,timeGridWeek,dayGridDay",
           },
           footerToolbar: { right: "prev,next" },
@@ -125,7 +124,7 @@ export default component$(() => {
 
   return (
     <div class="container mx-auto p-4">
-      <h1 class="text-2xl font-bold mb-6">Garden Details</h1>
+      <h1 class="text-2xl font-bold mb-6">Детайли за градината</h1>
 
       {isLoading.value && (
         <div class="flex justify-center items-center p-8">
@@ -133,12 +132,10 @@ export default component$(() => {
         </div>
       )}
 
-      {errorSignal.value && (
-        <div class="alert alert-error mb-4">{errorSignal.value}</div>
-      )}
+      {errorSignal.value && <div class="alert alert-error mb-4">{errorSignal.value}</div>}
 
       {!isLoading.value && !gardenSignal.value && (
-        <div class="alert alert-warning">Garden not found.</div>
+        <div class="alert alert-warning">Градината не съществува.</div>
       )}
 
       {gardenSignal.value && (
@@ -146,8 +143,7 @@ export default component$(() => {
           {/* Garden Images */}
           <div class="lg:col-span-1">
             <div class="card bg-base-100 shadow-xl">
-              {gardenSignal.value.photos &&
-              gardenSignal.value.photos.length > 0 ? (
+              {gardenSignal.value.photos && gardenSignal.value.photos.length > 0 ? (
                 <figure>
                   <img
                     src={`${pb.baseURL}/api/files/${gardenSignal.value.collectionId}/${gardenSignal.value.id}/${gardenSignal.value.photos[0]}`}
@@ -157,29 +153,26 @@ export default component$(() => {
                 </figure>
               ) : (
                 <div class="h-48 w-full bg-gray-200 flex items-center justify-center">
-                  <span class="text-gray-400">No image</span>
+                  <span class="text-gray-400">Няма снимка</span>
                 </div>
               )}
 
               {/* Additional photos gallery */}
-              {gardenSignal.value.photos &&
-                gardenSignal.value.photos.length > 1 && (
-                  <div class="p-4">
-                    <h3 class="font-bold text-lg mb-2">Gallery</h3>
-                    <div class="grid grid-cols-3 gap-2">
-                      {gardenSignal.value.photos
-                        .slice(1)
-                        .map((photo: string) => (
-                          <img
-                            key={photo}
-                            src={`${pb.baseURL}/api/files/${gardenSignal.value.collectionId}/${gardenSignal.value.id}/${photo}`}
-                            alt={gardenSignal.value.title}
-                            class="w-full h-24 object-cover rounded"
-                          />
-                        ))}
-                    </div>
+              {gardenSignal.value.photos && gardenSignal.value.photos.length > 1 && (
+                <div class="p-4">
+                  <h3 class="font-bold text-lg mb-2">Gallery</h3>
+                  <div class="grid grid-cols-3 gap-2">
+                    {gardenSignal.value.photos.slice(1).map((photo: string) => (
+                      <img
+                        key={photo}
+                        src={`${pb.baseURL}/api/files/${gardenSignal.value.collectionId}/${gardenSignal.value.id}/${photo}`}
+                        alt={gardenSignal.value.title}
+                        class="w-full h-24 object-cover rounded"
+                      />
+                    ))}
                   </div>
-                )}
+                </div>
+              )}
             </div>
           </div>
 
@@ -193,34 +186,25 @@ export default component$(() => {
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <h3 class="font-bold">Address</h3>
+                    <h3 class="font-bold">Адрес</h3>
                     <p>{gardenSignal.value.address || "No address provided"}</p>
                   </div>
 
                   <div>
-                    <h3 class="font-bold">Created</h3>
-                    <p>
-                      {new Date(
-                        gardenSignal.value.created,
-                      ).toLocaleDateString()}
-                    </p>
+                    <h3 class="font-bold">Създаден на</h3>
+                    <p>{new Date(gardenSignal.value.created).toLocaleDateString()}</p>
                   </div>
 
                   <div>
-                    <h3 class="font-bold">Last Updated</h3>
-                    <p>
-                      {new Date(
-                        gardenSignal.value.updated,
-                      ).toLocaleDateString()}
-                    </p>
+                    <h3 class="font-bold">Последна редакция</h3>
+                    <p>{new Date(gardenSignal.value.updated).toLocaleDateString()}</p>
                   </div>
                 </div>
 
                 <div class="mt-4">
-                  <h3 class="font-bold">Description</h3>
+                  <h3 class="font-bold">Описание</h3>
                   <p class="whitespace-pre-line">
-                    {gardenSignal.value.description ||
-                      "No description provided"}
+                    {gardenSignal.value.description || "No description provided"}
                   </p>
                 </div>
 
@@ -238,10 +222,10 @@ export default component$(() => {
                     href={`/tasks/create?gardenId=${gardenSignal.value.id}`}
                     class="btn btn-primary"
                   >
-                    Create Task
+                    Създай задача
                   </a>
                   <a href="/gardens" class="btn">
-                    Back to Gardens
+                    Назад към Градини
                   </a>
                 </div>
               </div>
@@ -253,13 +237,10 @@ export default component$(() => {
       {/* Calendar Section */}
       {gardenSignal.value && (
         <div class="mt-8">
-          <h2 class="text-xl font-bold mb-4">Tasks Calendar</h2>
+          <h2 class="text-xl font-bold mb-4">Календар със задачи</h2>
 
           {tasksSignal.value.length === 0 ? (
-            <div class="alert alert-info">
-              No tasks found for this garden. Create a task to see it in the
-              calendar.
-            </div>
+            <div class="alert alert-info">Не са открити задачи. Създай нова за календара.</div>
           ) : (
             <div class="card bg-base-100 shadow-xl">
               <div class="card-body">

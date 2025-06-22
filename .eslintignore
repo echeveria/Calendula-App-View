@@ -1,0 +1,14 @@
+# Ignore build output
+dist/
+build/
+out/
+
+# Ignore node_modules
+node_modules/
+
+# Ignore generated files
+*.generated.*
+*.min.*
+
+# Ignore server-side code
+server/

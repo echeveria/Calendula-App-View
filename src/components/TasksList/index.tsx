@@ -9,6 +9,8 @@ export interface TasksListProps {
   showCreateButton?: boolean;
 }
 
+type FilterType = "all" | "old" | "today" | "future" | "with_images";
+
 export const TasksList = component$<TasksListProps>(
   ({
     onTaskSelected = () => {},
@@ -21,6 +23,7 @@ export const TasksList = component$<TasksListProps>(
     const tasks = useSignal<any[]>([]);
     const errorSignal = useSignal("");
     const successSignal = useSignal("");
+    const currentFilter = useSignal<FilterType>("all");
 
     // Function to load tasks from PocketBase
     const loadTasks = $(async () => {
@@ -37,9 +40,38 @@ export const TasksList = component$<TasksListProps>(
         pb.authStore.save(getAuthToken() || "", null);
 
         try {
+          let filterStr = "";
+
+          // Apply filters based on currentFilter
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          const todayISOString = today.toISOString();
+
+          switch (currentFilter.value) {
+            case "today":
+              filterStr = `due_date >= "${todayISOString}" && due_date < "${new Date(today.getTime() + 24 * 60 * 60 * 1000).toISOString()}"`;
+              break;
+            case "old":
+              filterStr = `due_date < "${todayISOString}"`;
+              break;
+            case "future":
+              filterStr = `due_date > "${new Date(today.getTime() + 24 * 60 * 60 * 1000).toISOString()}"`;
+              break;
+            case "with_images":
+              filterStr = `images!=null && images!='[]'`;
+              break;
+            case "all":
+            default:
+              // No additional filter for "all"
+              break;
+          }
+
+          const filter = filterStr ? { filter: filterStr } : undefined;
+
           const response = await pb.collection("tasks").getList(1, 50, {
             sort: "-created",
             expand: "_garden",
+            ...filter,
           });
           console.log(response);
 
@@ -64,6 +96,12 @@ export const TasksList = component$<TasksListProps>(
       }
     });
 
+    // Function to handle filter changes
+    const handleFilterChange = $((filter: FilterType) => {
+      currentFilter.value = filter;
+      loadTasks();
+    });
+
     // Load tasks when component mounts
     useVisibleTask$(async () => {
       await loadTasks();
@@ -71,7 +109,7 @@ export const TasksList = component$<TasksListProps>(
 
     // Function to delete a task
     const deleteTask = $(async (taskId: string) => {
-      if (!confirm("Are you sure you want to delete this task?")) {
+      if (!confirm("Сигурни ли сте, че искате да изтриете задачата?")) {
         return;
       }
 
@@ -108,7 +146,40 @@ export const TasksList = component$<TasksListProps>(
     return (
       <div class="card bg-base-100 shadow-xl mb-6">
         <div class="card-body">
-          <h2 class="card-title">Tasks</h2>
+          <h2 class="card-title">Задачи</h2>
+
+          <div class="flex flex-wrap gap-2 my-4">
+            <button
+              class={`btn btn-sm ${currentFilter.value === "all" ? "btn-primary" : "btn-outline"}`}
+              onClick$={() => handleFilterChange("all")}
+            >
+              Всички
+            </button>
+            <button
+              class={`btn btn-sm ${currentFilter.value === "old" ? "btn-primary" : "btn-outline"}`}
+              onClick$={() => handleFilterChange("old")}
+            >
+              Стари
+            </button>
+            <button
+              class={`btn btn-sm ${currentFilter.value === "today" ? "btn-primary" : "btn-outline"}`}
+              onClick$={() => handleFilterChange("today")}
+            >
+              Днешни
+            </button>
+            <button
+              class={`btn btn-sm ${currentFilter.value === "future" ? "btn-primary" : "btn-outline"}`}
+              onClick$={() => handleFilterChange("future")}
+            >
+              Бъдещи
+            </button>
+            <button
+              class={`btn btn-sm ${currentFilter.value === "with_images" ? "btn-primary" : "btn-outline"}`}
+              onClick$={() => handleFilterChange("with_images")}
+            >
+              Със снимка
+            </button>
+          </div>
 
           {errorSignal.value && (
             <div class="alert alert-error mb-4">
@@ -154,17 +225,17 @@ export const TasksList = component$<TasksListProps>(
             </div>
           ) : tasks.value.length === 0 ? (
             <div class="text-center p-4">
-              <p>No tasks found. Create your first task!</p>
+              <p>Няма открити задачи!</p>
             </div>
           ) : (
             <div class="overflow-x-auto">
               <table class="table w-full">
                 <thead>
                   <tr>
-                    <th>Title</th>
-                    <th>Status</th>
-                    <th>Run At</th>
-                    {showActions && <th>Actions</th>}
+                    <th>Заглавие</th>
+                    <th>Състояние</th>
+                    <th>Изпълнен на</th>
+                    {showActions && <th>Действия</th>}
                   </tr>
                 </thead>
                 <tbody>
@@ -192,18 +263,15 @@ export const TasksList = component$<TasksListProps>(
                       {showActions && (
                         <td onClick$={(e) => e.stopPropagation()}>
                           <div class="flex space-x-2">
-                            <a
-                              href={`/tasks/edit/${task.id}`}
-                              class="btn btn-sm btn-primary"
-                            >
-                              Edit
+                            <a href={`/tasks/edit/${task.id}`} class="btn btn-sm btn-primary">
+                              Редактирай
                             </a>
                             <button
                               class={`btn btn-sm btn-error ${isDeleting.value ? "loading" : ""}`}
                               onClick$={() => deleteTask(task.id)}
                               disabled={isDeleting.value}
                             >
-                              Delete
+                              Изтрий
                             </button>
                           </div>
                         </td>
@@ -218,12 +286,12 @@ export const TasksList = component$<TasksListProps>(
           {showCreateButton && (
             <div class="card-actions justify-end mt-4">
               <a href="/tasks/create" class="btn btn-primary">
-                Create New Task
+                Създай нова задача
               </a>
             </div>
           )}
         </div>
       </div>
     );
-  },
+  }
 );

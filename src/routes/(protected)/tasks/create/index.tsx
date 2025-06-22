@@ -1,9 +1,5 @@
 import { component$, useSignal, $, NoSerialize } from "@builder.io/qwik";
-import {
-  useNavigate,
-  type DocumentHead,
-  useLocation,
-} from "@builder.io/qwik-city";
+import { useNavigate, type DocumentHead, useLocation } from "@builder.io/qwik-city";
 import { pb, getAuthToken, getUserInfo } from "~/utils/pocketbase";
 import { TaskForm } from "~/components/TaskForm/TaskForm";
 import { handleImageDelete, handleImageUpload } from "~/utils/views";
@@ -110,20 +106,20 @@ export default component$(() => {
               dateSignal={dateSignal}
               isLoading={isLoading}
               infoSignal={infoSignal}
-              btnTitle="Запазиа"
+              btnTitle="Запази"
               title="Нова Задача"
               handleImageUpload={$((files: File[]) =>
-                handleImageUpload(files, imagesSignal, imagesPreviewSignal),
+                handleImageUpload(files, imagesSignal, imagesPreviewSignal)
               )}
               images={imagesPreviewSignal.value}
               handleImageDelete={$((index: number) =>
-                handleImageDelete(index, imagesSignal, imagesPreviewSignal),
+                handleImageDelete(index, imagesSignal, imagesPreviewSignal)
               )}
             />
 
             <div class="text-center mt-4">
               <a href="/tasks" class="link link-primary">
-                Back to Tasks
+                Обратно в Задачи
               </a>
             </div>
           </div>

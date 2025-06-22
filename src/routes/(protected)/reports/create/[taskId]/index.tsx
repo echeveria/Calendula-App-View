@@ -1,9 +1,5 @@
 import { component$, useSignal, $ } from "@builder.io/qwik";
-import {
-  useNavigate,
-  type DocumentHead,
-  useLocation,
-} from "@builder.io/qwik-city";
+import { useNavigate, type DocumentHead, useLocation } from "@builder.io/qwik-city";
 import { pb, getAuthToken } from "~/utils/pocketbase";
 import { ReportForm } from "~/components/ReportForm";
 
@@ -14,6 +10,7 @@ export default component$(() => {
 
   const titleSignal = useSignal("");
   const contentSignal = useSignal("");
+  const markedAsReadSignal = useSignal(false);
   const errorSignal = useSignal("");
   const isLoading = useSignal(false);
 
@@ -46,6 +43,7 @@ export default component$(() => {
       const reportData = {
         title: titleSignal.value,
         content: contentSignal.value,
+        marked_as_read: markedAsReadSignal.value,
         _task: taskId,
       };
 
@@ -71,7 +69,7 @@ export default component$(() => {
   return (
     <div class="min-h-screen bg-base-200 p-4">
       <div class="max-w-md mx-auto">
-        <h1 class="text-3xl font-bold mb-6">Create New Report</h1>
+        <h1 class="text-3xl font-bold mb-6">Създай рапорт</h1>
 
         {errorSignal.value && (
           <div class="alert alert-error mb-4">
@@ -98,9 +96,11 @@ export default component$(() => {
               handleSubmit={handleSubmit}
               titleSignal={titleSignal}
               contentSignal={contentSignal}
+              markedAsReadSignal={markedAsReadSignal}
               isLoading={isLoading}
-              title="New Report"
-              btnTitle="Create Report"
+              title="Нов Репорт"
+              btnTitle="Запази"
+              showMarkedAsRead={false}
             />
             <div class="text-center mt-4">
               <a href="/reports" class="link link-primary">

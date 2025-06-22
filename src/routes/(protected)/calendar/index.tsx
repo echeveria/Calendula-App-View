@@ -1,10 +1,4 @@
-import {
-  $,
-  component$,
-  useSignal,
-  useStore,
-  useVisibleTask$,
-} from "@builder.io/qwik";
+import { $, component$, useSignal, useStore, useVisibleTask$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { getAuthToken, getUserInfo, pb } from "~/utils/pocketbase";
 import { TaskModal } from "~/components/TaskModal";
@@ -75,12 +69,7 @@ export default component$(() => {
 
     if (calendarEl) {
       const calendar = new Calendar(calendarEl, {
-        plugins: [
-          interactionPlugin,
-          dayGridPlugin,
-          timeGridPlugin,
-          dayGridPlugin,
-        ],
+        plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, dayGridPlugin],
         initialView: "dayGridMonth",
         selectable: true,
         dateClick: function (info) {
@@ -108,10 +97,9 @@ export default component$(() => {
         },
         headerToolbar: {
           left: "title",
-          center: "prev,next",
           right: "dayGridMonth,timeGridWeek,dayGridDay",
         },
-        footerToolbar: { right: "prev,next", left: "myCustomButton" },
+        footerToolbar: { right: "prev,next" /*left: "myCustomButton" */ },
         dayMaxEventRows: true,
         views: {
           timeGrid: {

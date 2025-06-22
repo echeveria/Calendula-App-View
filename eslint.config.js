@@ -73,6 +73,13 @@ export default tseslint.config(
       "qwik/jsx-img": "off",
       "qwik/no-use-visible-task": "off",
       "qwik/valid-lexical-scope": "off",
+      "qwik/jsx-key": "off",
+      "qwik/jsx-no-script-url": "off",
+      "qwik/jsx-no-target-blank": "off",
+      "qwik/jsx-no-undef": "off",
+      "qwik/jsx-uses-vars": "off",
+      "qwik/jsx-a11y": "off",
+      "qwik/jsx-class": "off", // Disable conversion of class to className
     },
   },
 );

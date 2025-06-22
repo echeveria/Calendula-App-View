@@ -20,7 +20,7 @@ export default component$(() => {
   return (
     <div class="min-h-screen bg-base-200 p-4">
       <div class="max-w-4xl mx-auto">
-        <h1 class="text-3xl font-bold mb-6">Task Management</h1>
+        <h1 class="text-3xl font-bold mb-6">Мениджър на задачи</h1>
 
         {successSignal.value && (
           <div class="alert alert-success mb-4">
@@ -53,11 +53,11 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "Task Management",
+  title: "Мениджър на задачи",
   meta: [
     {
       name: "description",
-      content: "Create and manage your tasks",
+      content: "Създай и менежирай своите задачи",
     },
   ],
 };

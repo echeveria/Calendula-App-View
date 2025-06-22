@@ -13,8 +13,8 @@ export const GardensSelector = component$<GardensSelectorProps>(
   ({
     selectedId,
     onSelectionChange = $(() => {}),
-    label = "Task Configuration",
-    placeholder = "-- Select a configuration --",
+    label = "Обект",
+    placeholder = "-- Избери обект --",
     required = false,
   }) => {
     const taskConfigsSignal = useSignal<any[]>([]);
@@ -37,14 +37,12 @@ export const GardensSelector = component$<GardensSelectorProps>(
 
           taskConfigsSignal.value = response.items || [];
         } catch (err: any) {
-          errorSignal.value =
-            err.message || "Failed to load task configurations";
+          errorSignal.value = err.message || "Failed to load Обект";
           console.error("Error loading task configs:", err);
         }
       } catch (error) {
         console.error("Error loading task configs:", error);
-        errorSignal.value =
-          "An error occurred while loading task configurations";
+        errorSignal.value = "An error occurred while loading Обект";
       } finally {
         isLoading.value = false;
       }
@@ -81,17 +79,15 @@ export const GardensSelector = component$<GardensSelectorProps>(
           ))}
         </select>
 
-        {errorSignal.value && (
-          <div class="text-error text-sm mt-1">{errorSignal.value}</div>
-        )}
+        {errorSignal.value && <div class="text-error text-sm mt-1">{errorSignal.value}</div>}
 
         {isLoading.value && (
           <div class="text-sm mt-1 flex items-center">
             <span class="loading loading-spinner loading-xs mr-2"></span>
-            <span>Loading configurations...</span>
+            <span>Зареждане на конфигурация...</span>
           </div>
         )}
       </div>
     );
-  },
+  }
 );

@@ -1,0 +1,19 @@
+{
+  "jsxSingleQuote": false,
+  "singleQuote": false,
+  "semi": true,
+  "tabWidth": 2,
+  "trailingComma": "es5",
+  "printWidth": 100,
+  "bracketSameLine": false,
+  "useTabs": false,
+  "htmlWhitespaceSensitivity": "css",
+  "overrides": [
+    {
+      "files": ["*.tsx", "*.jsx"],
+      "options": {
+        "parser": "typescript"
+      }
+    }
+  ]
+}

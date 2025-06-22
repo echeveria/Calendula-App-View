@@ -1,9 +1,5 @@
 import { component$, useSignal, $, useVisibleTask$ } from "@builder.io/qwik";
-import {
-  useNavigate,
-  useLocation,
-  type DocumentHead,
-} from "@builder.io/qwik-city";
+import { useNavigate, useLocation, type DocumentHead } from "@builder.io/qwik-city";
 import { pb, getAuthToken } from "~/utils/pocketbase";
 import { ReportForm } from "~/components/ReportForm";
 
@@ -14,6 +10,7 @@ export default component$(() => {
 
   const titleSignal = useSignal("");
   const contentSignal = useSignal("");
+  const markedAsReadSignal = useSignal(false);
   const errorSignal = useSignal("");
   const isLoading = useSignal(false);
   const isLoadingReport = useSignal(true);
@@ -33,6 +30,7 @@ export default component$(() => {
         // Populate form with report data
         titleSignal.value = data.title || "";
         contentSignal.value = data.content || "";
+        markedAsReadSignal.value = data.marked_as_read || false;
       } catch (err: any) {
         errorSignal.value = err.message || "Failed to load report";
         console.error("Error loading report:", err);
@@ -73,6 +71,7 @@ export default component$(() => {
       const reportData = {
         title: titleSignal.value,
         content: contentSignal.value,
+        marked_as_read: markedAsReadSignal.value,
       };
 
       // Set the auth token for the request
@@ -83,7 +82,7 @@ export default component$(() => {
         // Redirect to reports list with success message
         navigate("/reports");
       } catch (err: any) {
-        errorSignal.value = err.message || "Failed to update report";
+        errorSignal.value = err.message || "Упдейта на рапорта пропадна";
         console.error("Error updating report:", err);
       }
     } catch (error) {
@@ -125,7 +124,7 @@ export default component$(() => {
   return (
     <div class="min-h-screen bg-base-200 p-4">
       <div class="max-w-md mx-auto">
-        <h1 class="text-3xl font-bold mb-6">Edit Report</h1>
+        <h1 class="text-3xl font-bold mb-6">Редакция на рапорт</h1>
 
         {errorSignal.value && (
           <div class="alert alert-error mb-4">
@@ -150,7 +149,7 @@ export default component$(() => {
           <div class="card bg-base-100 shadow-xl">
             <div class="card-body flex items-center justify-center">
               <span class="loading loading-spinner loading-lg"></span>
-              <p class="mt-4">Loading report data...</p>
+              <p class="mt-4">Зареждане на репорти...</p>
             </div>
           </div>
         ) : (
@@ -160,9 +159,10 @@ export default component$(() => {
                 handleSubmit={handleSubmit}
                 titleSignal={titleSignal}
                 contentSignal={contentSignal}
+                markedAsReadSignal={markedAsReadSignal}
                 isLoading={isLoading}
-                title={titleSignal.value || "Edit Report"}
-                btnTitle="Update Report"
+                title={titleSignal.value || "Редакция на рапор"}
+                btnTitle="Запази"
                 id={reportId}
                 handleDelete={handleDelete}
               />
