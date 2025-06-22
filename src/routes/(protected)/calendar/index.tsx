@@ -7,7 +7,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import { Calendar } from "@fullcalendar/core";
 import bgLocale from "@fullcalendar/core/locales/bg";
-import { statusToColor, taskStatus, taskStatusValue } from "~/utils/views";
+import { statusToColor, taskStatus } from "~/utils/views";
 import { CalendarStatusFilter } from "~/components/CalendarStatusFilter/CalendarStatusFilter";
 
 export default component$(() => {
