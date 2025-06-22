@@ -36,7 +36,7 @@ export default component$(() => {
 
   return (
     <div class="container mx-auto p-4">
-      <h1 class="text-2xl font-bold mb-6">Градини</h1>
+      <h1 class="text-2xl font-bold mb-6">Обекти</h1>
 
       {isLoading.value && (
         <div class="flex justify-center items-center p-8">
@@ -44,12 +44,10 @@ export default component$(() => {
         </div>
       )}
 
-      {errorSignal.value && (
-        <div class="alert alert-error mb-4">{errorSignal.value}</div>
-      )}
+      {errorSignal.value && <div class="alert alert-error mb-4">{errorSignal.value}</div>}
 
       {!isLoading.value && gardensSignal.value.length === 0 && (
-        <div class="alert alert-info">Няма намерени градини.</div>
+        <div class="alert alert-info">Няма намерени Обекти.</div>
       )}
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -72,10 +70,7 @@ export default component$(() => {
               <h2 class="card-title">{garden.title}</h2>
               <p>{garden.address}</p>
               <div class="card-actions justify-end mt-4">
-                <a
-                  href={`/gardens/details/${garden.id}`}
-                  class="btn btn-primary"
-                >
+                <a href={`/gardens/details/${garden.id}`} class="btn btn-primary">
                   Детайли
                 </a>
               </div>

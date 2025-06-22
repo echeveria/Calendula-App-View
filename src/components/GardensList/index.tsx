@@ -95,7 +95,7 @@ export const GardensList = component$<GardensListProps>(
     return (
       <div class="card bg-base-100 shadow-xl mb-6">
         <div class="card-body">
-          <h2 class="card-title">Градини</h2>
+          <h2 class="card-title">Обекти</h2>
 
           {errorSignal.value && (
             <div class="alert alert-error mb-4">
@@ -141,7 +141,7 @@ export const GardensList = component$<GardensListProps>(
             </div>
           ) : gardens.value.length === 0 ? (
             <div class="text-center p-4">
-              <p>Няма добавени градини. Създайте първата!</p>
+              <p>Няма добавени Обекти. Създайте първата!</p>
             </div>
           ) : (
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -160,24 +160,16 @@ export const GardensList = component$<GardensListProps>(
                     <h3 class="card-title">{garden.title}</h3>
                     <p>{garden.address}</p>
                     <div class="card-actions justify-end mt-2">
-                      <a
-                        href={`/gardens/details/${garden.id}`}
-                        class="btn btn-primary btn-sm"
-                      >
+                      <a href={`/gardens/details/${garden.id}`} class="btn btn-primary btn-sm">
                         Детайли
                       </a>
                       {showActions && (
                         <>
-                          <a
-                            href={`/gardens/edit/${garden.id}`}
-                            class="btn btn-sm btn-secondary"
-                          >
+                          <a href={`/gardens/edit/${garden.id}`} class="btn btn-sm btn-secondary">
                             Редактирай
                           </a>
                           <button
-                            class={`btn btn-sm btn-error ${
-                              isDeleting.value ? "loading" : ""
-                            }`}
+                            class={`btn btn-sm btn-error ${isDeleting.value ? "loading" : ""}`}
                             onClick$={() => deleteGarden(garden.id)}
                             disabled={isDeleting.value}
                           >
@@ -202,5 +194,5 @@ export const GardensList = component$<GardensListProps>(
         </div>
       </div>
     );
-  },
+  }
 );

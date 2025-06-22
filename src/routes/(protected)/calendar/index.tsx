@@ -7,7 +7,8 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import { Calendar } from "@fullcalendar/core";
 import bgLocale from "@fullcalendar/core/locales/bg";
-import { formatStatus, statusToColor, taskStatus, taskStatusValue } from "~/utils/views";
+import { statusToColor, taskStatus, taskStatusValue } from "~/utils/views";
+import { CalendarStatusFilter } from "~/components/CalendarStatusFilter/CalendarStatusFilter";
 
 export default component$(() => {
   const isModalOpen = useSignal(false);
@@ -27,12 +28,6 @@ export default component$(() => {
   const tasks = useStore<{ value: any[] }>({ value: [] });
   const isLoading = useSignal(false);
   const errorSignal = useSignal("");
-
-  // Function to handle status filter changes
-  const handleStatusFilterChange = $((status: "all" | taskStatus) => {
-    currentStatusFilter.value = status;
-    loadTasks();
-  });
 
   // Function to load tasks from PocketBase
   const loadTasks = $(async () => {
@@ -63,6 +58,7 @@ export default component$(() => {
           sort: "-created",
           expand: "_garden",
           ...filter,
+          requestKey: null,
         });
 
         tasks.value = response || [];
@@ -76,6 +72,12 @@ export default component$(() => {
     } finally {
       isLoading.value = false;
     }
+  });
+
+  // Function to handle status filter changes
+  const handleStatusFilterChange = $((status: "all" | taskStatus) => {
+    currentStatusFilter.value = status;
+    loadTasks();
   });
 
   useVisibleTask$(async ({ track }) => {
@@ -147,39 +149,11 @@ export default component$(() => {
 
   return (
     <div class="min-h-screen p-4 bg-base-200 rounded-box">
-      <div class="flex flex-wrap gap-2 mb-4">
-        <button
-          class={`btn btn-sm ${currentStatusFilter.value === "all" ? "btn-primary" : "btn-outline"}`}
-          onClick$={() => handleStatusFilterChange("all")}
-        >
-          Всички
-        </button>
-        <button
-          class={`btn btn-sm ${currentStatusFilter.value === "pending" ? "btn-primary" : "btn-outline"}`}
-          onClick$={() => handleStatusFilterChange("pending")}
-        >
-          Изчакващи
-        </button>
-        <button
-          class={`btn btn-sm ${currentStatusFilter.value === "in_progress" ? "btn-primary" : "btn-outline"}`}
-          onClick$={() => handleStatusFilterChange("in_progress")}
-        >
-          Текущи
-        </button>
-        <button
-          class={`btn btn-sm ${currentStatusFilter.value === "completed" ? "btn-primary" : "btn-outline"}`}
-          onClick$={() => handleStatusFilterChange("completed")}
-        >
-          Завършени
-        </button>
-        <button
-          class={`btn btn-sm ${currentStatusFilter.value === "canceled" ? "btn-primary" : "btn-outline"}`}
-          onClick$={() => handleStatusFilterChange("canceled")}
-        >
-          Прекратени
-        </button>
-      </div>
-      <div id="calendar"></div>
+      <CalendarStatusFilter
+        handleStatusFilterChange={handleStatusFilterChange}
+        currentStatusFilter={currentStatusFilter}
+      />
+      <div id="calendar" />
       <TaskModal
         isOpen={isModalOpen.value}
         onClose={closeModal}

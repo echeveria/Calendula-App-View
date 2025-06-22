@@ -225,7 +225,7 @@ export default component$(() => {
                     Създай задача
                   </a>
                   <a href="/gardens" class="btn">
-                    Назад към Градини
+                    Назад към Обекти
                   </a>
                 </div>
               </div>

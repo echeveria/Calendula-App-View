@@ -1,10 +1,6 @@
 import { $, component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
 import { useLocation, useNavigate } from "@builder.io/qwik-city";
-import {
-  clearAuthToken,
-  isLoggedIn as checkIsLoggedIn,
-  clearUserInfo,
-} from "~/utils/pocketbase";
+import { clearAuthToken, isLoggedIn as checkIsLoggedIn, clearUserInfo } from "~/utils/pocketbase";
 
 import logo from "~/../public/logo.svg";
 
@@ -47,11 +43,7 @@ export const Navigation = component$(() => {
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              <path
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 6h16M4 12h8m-8 6h16"
-              />
+              <path stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
             </svg>
           </div>
           {!isMenuOpen.value && (
@@ -60,10 +52,7 @@ export const Navigation = component$(() => {
               class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
             >
               <li>
-                <a
-                  href="/"
-                  class={location.url.pathname === "/" ? "menu-active" : ""}
-                >
+                <a href="/" class={location.url.pathname === "/" ? "menu-active" : ""}>
                   Начало
                 </a>
               </li>
@@ -72,9 +61,7 @@ export const Navigation = component$(() => {
                   <li>
                     <a
                       href="/login"
-                      class={
-                        location.url.pathname === "/login/" ? "menu-active" : ""
-                      }
+                      class={location.url.pathname === "/login/" ? "menu-active" : ""}
                     >
                       Вход
                     </a>
@@ -82,11 +69,7 @@ export const Navigation = component$(() => {
                   <li>
                     <a
                       href="/register"
-                      class={
-                        location.url.pathname === "/register/"
-                          ? "menu-active"
-                          : ""
-                      }
+                      class={location.url.pathname === "/register/" ? "menu-active" : ""}
                     >
                       Регистрация
                     </a>
@@ -97,23 +80,15 @@ export const Navigation = component$(() => {
                   <li>
                     <a
                       href="/gardens"
-                      class={
-                        location.url.pathname === "/gardens/"
-                          ? "menu-active"
-                          : ""
-                      }
+                      class={location.url.pathname === "/gardens/" ? "menu-active" : ""}
                     >
-                      Градини
+                      Обекти
                     </a>
                   </li>
                   <li>
                     <a
                       href="/calendar"
-                      class={
-                        location.url.pathname === "/calendar/"
-                          ? "menu-active"
-                          : ""
-                      }
+                      class={location.url.pathname === "/calendar/" ? "menu-active" : ""}
                     >
                       Календар
                     </a>
@@ -121,11 +96,7 @@ export const Navigation = component$(() => {
                   <li>
                     <a
                       href="/tasks"
-                      class={
-                        location.url.pathname.startsWith("/tasks/")
-                          ? "menu-active"
-                          : ""
-                      }
+                      class={location.url.pathname.startsWith("/tasks/") ? "menu-active" : ""}
                     >
                       Задачи
                     </a>
@@ -133,11 +104,7 @@ export const Navigation = component$(() => {
                   <li>
                     <a
                       href="/reports"
-                      class={
-                        location.url.pathname.startsWith("/reports/")
-                          ? "menu-active"
-                          : ""
-                      }
+                      class={location.url.pathname.startsWith("/reports/") ? "menu-active" : ""}
                     >
                       Рапорти
                     </a>
@@ -160,31 +127,21 @@ export const Navigation = component$(() => {
       <div class="navbar-center hidden lg:flex">
         <ul class="menu menu-horizontal px-1">
           <li>
-            <a
-              href="/"
-              class={location.url.pathname === "/" ? "menu-active" : ""}
-            >
+            <a href="/" class={location.url.pathname === "/" ? "menu-active" : ""}>
               Начало
             </a>
           </li>
           {!isLoggedIn.value ? (
             <>
               <li>
-                <a
-                  href="/login"
-                  class={
-                    location.url.pathname === "/login/" ? "menu-active" : ""
-                  }
-                >
+                <a href="/login" class={location.url.pathname === "/login/" ? "menu-active" : ""}>
                   Вход
                 </a>
               </li>
               <li>
                 <a
                   href="/register"
-                  class={
-                    location.url.pathname === "/register/" ? "menu-active" : ""
-                  }
+                  class={location.url.pathname === "/register/" ? "menu-active" : ""}
                 >
                   Регистрация
                 </a>
@@ -195,19 +152,15 @@ export const Navigation = component$(() => {
               <li>
                 <a
                   href="/gardens"
-                  class={
-                    location.url.pathname === "/gardens/" ? "menu-active" : ""
-                  }
+                  class={location.url.pathname === "/gardens/" ? "menu-active" : ""}
                 >
-                  Градини
+                  Обекти
                 </a>
               </li>
               <li>
                 <a
                   href="/calendar"
-                  class={
-                    location.url.pathname === "/calendar/" ? "menu-active" : ""
-                  }
+                  class={location.url.pathname === "/calendar/" ? "menu-active" : ""}
                 >
                   Календар
                 </a>
@@ -215,11 +168,7 @@ export const Navigation = component$(() => {
               <li>
                 <a
                   href="/tasks"
-                  class={
-                    location.url.pathname.startsWith("/tasks/")
-                      ? "menu-active"
-                      : ""
-                  }
+                  class={location.url.pathname.startsWith("/tasks/") ? "menu-active" : ""}
                 >
                   Задачи
                 </a>
@@ -227,11 +176,7 @@ export const Navigation = component$(() => {
               <li>
                 <a
                   href="/reports"
-                  class={
-                    location.url.pathname.startsWith("/reports/")
-                      ? "menu-active"
-                      : ""
-                  }
+                  class={location.url.pathname.startsWith("/reports/") ? "menu-active" : ""}
                 >
                   Рапорти
                 </a>
@@ -248,16 +193,9 @@ export const Navigation = component$(() => {
       <div class="navbar-end">
         {isLoggedIn.value && (
           <div class="dropdown dropdown-end">
-            <div
-              tabIndex={0}
-              role="button"
-              class="btn btn-ghost btn-circle avatar"
-            >
+            <div tabIndex={0} role="button" class="btn btn-ghost btn-circle avatar">
               <div class="w-10 rounded-full">
-                <img
-                  alt="User avatar"
-                  src="https://ui-avatars.com/api/?name=User"
-                />
+                <img alt="User avatar" src="https://ui-avatars.com/api/?name=User" />
               </div>
             </div>
             <ul
