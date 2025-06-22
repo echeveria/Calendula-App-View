@@ -7,12 +7,13 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import { Calendar } from "@fullcalendar/core";
 import bgLocale from "@fullcalendar/core/locales/bg";
-import { statusToColor } from "~/utils/views";
+import { formatStatus, statusToColor, taskStatus, taskStatusValue } from "~/utils/views";
 
 export default component$(() => {
   const isModalOpen = useSignal(false);
   const selectedDate = useSignal("");
   const selectedTaskId = useSignal("");
+  const currentStatusFilter = useSignal<"all" | taskStatus>("all");
 
   const closeModal = $((reload?: boolean) => {
     isModalOpen.value = false;
@@ -27,6 +28,12 @@ export default component$(() => {
   const isLoading = useSignal(false);
   const errorSignal = useSignal("");
 
+  // Function to handle status filter changes
+  const handleStatusFilterChange = $((status: "all" | taskStatus) => {
+    currentStatusFilter.value = status;
+    loadTasks();
+  });
+
   // Function to load tasks from PocketBase
   const loadTasks = $(async () => {
     isLoading.value = true;
@@ -37,10 +44,19 @@ export default component$(() => {
       pb.authStore.save(getAuthToken() || "", null);
 
       const user = getUserInfo();
-      let filter = undefined;
+      let filterStr = "";
+
       if (user.type === "owner") {
-        filter = { filter: `garden._owner = "${user.id}"` };
+        filterStr = `garden._owner = "${user.id}"`;
       }
+
+      // Add status filter if not "all"
+      if (currentStatusFilter.value !== "all") {
+        const statusFilter = `status = "${currentStatusFilter.value}"`;
+        filterStr = filterStr ? `${filterStr} && ${statusFilter}` : statusFilter;
+      }
+
+      const filter = filterStr ? { filter: filterStr } : undefined;
 
       try {
         const response = await pb.collection("tasks").getFullList({
@@ -62,12 +78,19 @@ export default component$(() => {
     }
   });
 
-  useVisibleTask$(async () => {
+  useVisibleTask$(async ({ track }) => {
+    // Track changes to tasks and currentStatusFilter
+    track(() => tasks.value);
+    track(() => currentStatusFilter.value);
+
     await loadTasks();
 
     const calendarEl = document.getElementById("calendar");
 
     if (calendarEl) {
+      // Clear the calendar element to avoid duplicate calendars
+      calendarEl.innerHTML = "";
+
       const calendar = new Calendar(calendarEl, {
         plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, dayGridPlugin],
         initialView: "dayGridMonth",
@@ -110,30 +133,6 @@ export default component$(() => {
           },
         },
         height: "auto",
-        // events: [
-        //     {
-        //         title: 'Meeting',
-        //         start:'2025-06-01',
-        //     },
-        //     {
-        //         title: 'Birthday Party',
-        //         start: '2025-06-01',
-        //         backgroundColor: 'green',
-        //         borderColor: 'green',
-        //     },
-        //     {
-        //         title: 'Birthday Party',
-        //         start: '2025-06-01',
-        //         backgroundColor: 'green',
-        //         borderColor: 'green',
-        //     },
-        //     {
-        //         title: 'Birthday Party',
-        //         start: '2025-06-01',
-        //         backgroundColor: 'green',
-        //         borderColor: 'green',
-        //     }
-        // ],
         events: tasks.value.map((task) => ({
           title: task.expand._garden.title,
           id: task.id,
@@ -148,6 +147,38 @@ export default component$(() => {
 
   return (
     <div class="min-h-screen p-4 bg-base-200 rounded-box">
+      <div class="flex flex-wrap gap-2 mb-4">
+        <button
+          class={`btn btn-sm ${currentStatusFilter.value === "all" ? "btn-primary" : "btn-outline"}`}
+          onClick$={() => handleStatusFilterChange("all")}
+        >
+          Всички
+        </button>
+        <button
+          class={`btn btn-sm ${currentStatusFilter.value === "pending" ? "btn-primary" : "btn-outline"}`}
+          onClick$={() => handleStatusFilterChange("pending")}
+        >
+          Изчакващи
+        </button>
+        <button
+          class={`btn btn-sm ${currentStatusFilter.value === "in_progress" ? "btn-primary" : "btn-outline"}`}
+          onClick$={() => handleStatusFilterChange("in_progress")}
+        >
+          Текущи
+        </button>
+        <button
+          class={`btn btn-sm ${currentStatusFilter.value === "completed" ? "btn-primary" : "btn-outline"}`}
+          onClick$={() => handleStatusFilterChange("completed")}
+        >
+          Завършени
+        </button>
+        <button
+          class={`btn btn-sm ${currentStatusFilter.value === "canceled" ? "btn-primary" : "btn-outline"}`}
+          onClick$={() => handleStatusFilterChange("canceled")}
+        >
+          Прекратени
+        </button>
+      </div>
       <div id="calendar"></div>
       <TaskModal
         isOpen={isModalOpen.value}
