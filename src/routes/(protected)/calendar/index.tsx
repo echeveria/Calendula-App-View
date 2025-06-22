@@ -1,4 +1,4 @@
-import { $, component$, useSignal, useStore, useVisibleTask$ } from "@builder.io/qwik";
+import { $, component$, noSerialize, useSignal, useStore, useVisibleTask$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { getAuthToken, getUserInfo, pb } from "~/utils/pocketbase";
 import { TaskModal } from "~/components/TaskModal";
@@ -14,7 +14,8 @@ export default component$(() => {
   const isModalOpen = useSignal(false);
   const selectedDate = useSignal("");
   const selectedTaskId = useSignal("");
-  const currentStatusFilter = useSignal<"all" | taskStatus>("all");
+  const calendarRef = useSignal<ReturnType<typeof noSerialize<Calendar>>>();
+  const statusFilter = useSignal<"all" | taskStatus>("all");
 
   const closeModal = $((reload?: boolean) => {
     isModalOpen.value = false;
@@ -39,26 +40,16 @@ export default component$(() => {
       pb.authStore.save(getAuthToken() || "", null);
 
       const user = getUserInfo();
-      let filterStr = "";
-
+      let filter = undefined;
       if (user.type === "owner") {
-        filterStr = `garden._owner = "${user.id}"`;
+        filter = { filter: `garden._owner = "${user.id}"` };
       }
-
-      // Add status filter if not "all"
-      if (currentStatusFilter.value !== "all") {
-        const statusFilter = `status = "${currentStatusFilter.value}"`;
-        filterStr = filterStr ? `${filterStr} && ${statusFilter}` : statusFilter;
-      }
-
-      const filter = filterStr ? { filter: filterStr } : undefined;
 
       try {
         const response = await pb.collection("tasks").getFullList({
           sort: "-created",
           expand: "_garden",
           ...filter,
-          requestKey: null,
         });
 
         tasks.value = response || [];
@@ -74,36 +65,33 @@ export default component$(() => {
     }
   });
 
-  // Function to handle status filter changes
-  const handleStatusFilterChange = $((status: "all" | taskStatus) => {
-    currentStatusFilter.value = status;
-    loadTasks();
-  });
-
-  useVisibleTask$(async ({ track }) => {
-    // Track changes to tasks and currentStatusFilter
-    track(() => tasks.value);
-    track(() => currentStatusFilter.value);
-
+  useVisibleTask$(async () => {
     await loadTasks();
 
     const calendarEl = document.getElementById("calendar");
+    if (!calendarEl) return;
 
-    if (calendarEl) {
-      // Clear the calendar element to avoid duplicate calendars
-      calendarEl.innerHTML = "";
+    const originalEvents = tasks.value.map((task) => ({
+      title: task.expand._garden.title,
+      id: task.id,
+      start: task.due_date,
+      backgroundColor: statusToColor(task.status),
+      borderColor: statusToColor(task.status),
+    }));
 
+    if (!calendarRef.value) {
       const calendar = new Calendar(calendarEl, {
-        plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, dayGridPlugin],
+        plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin],
+        displayEventTime: false,
         initialView: "dayGridMonth",
         selectable: true,
-        dateClick: function (info) {
+        dateClick: (info) => {
           info.jsEvent.preventDefault();
           selectedDate.value = info.dateStr;
           selectedTaskId.value = "";
           isModalOpen.value = true;
         },
-        eventClick: function (info) {
+        eventClick: (info) => {
           info.jsEvent.preventDefault();
           selectedTaskId.value = info.event.id;
           selectedDate.value = "";
@@ -112,46 +100,58 @@ export default component$(() => {
         locales: [bgLocale],
         locale: "bg",
         titleFormat: { month: "long" },
-        customButtons: {
-          myCustomButton: {
-            text: "custom!",
-            click: function () {
-              alert("clicked the custom button!");
-            },
-          },
-        },
         headerToolbar: {
           left: "title",
-          right: "dayGridMonth,timeGridWeek,dayGridDay",
+          right: "dayGridMonth,timeGridWeek,timeGridDay",
         },
-        footerToolbar: { right: "prev,next" /*left: "myCustomButton" */ },
+        footerToolbar: {
+          right: "prev,next",
+        },
         dayMaxEventRows: true,
         views: {
-          timeGrid: {
-            dayMaxEventRows: 3, // adjust to 6 only for timeGridWeek/timeGridDay
-          },
-          dayGrid: {
-            dayMaxEventRows: 3, // adjust to 6 only for timeGridWeek/timeGridDay
-          },
+          timeGrid: { dayMaxEventRows: 3 },
+          dayGrid: { dayMaxEventRows: 3 },
         },
         height: "auto",
-        events: tasks.value.map((task) => ({
-          title: task.expand._garden.title,
-          id: task.id,
-          start: task.due_date,
-          backgroundColor: statusToColor(task.status),
-          borderColor: statusToColor(task.status),
-        })),
+        events: originalEvents,
       });
+
       calendar.render();
+      calendarRef.value = noSerialize(calendar);
+    } else {
+      calendarRef.value.removeAllEvents();
+      calendarRef.value.addEventSource(originalEvents);
     }
+  });
+
+  const filterEvents = $((status: string) => {
+    if (!calendarRef.value) return;
+
+    const filtered =
+      status === "all" ? tasks.value : tasks.value.filter((task) => task.status === status);
+
+    const eventsToShow = filtered.map((task) => ({
+      title: task.expand._garden.title,
+      id: task.id,
+      start: task.due_date,
+      backgroundColor: statusToColor(task.status),
+      borderColor: statusToColor(task.status),
+    }));
+
+    calendarRef.value.removeAllEvents();
+    calendarRef.value.addEventSource(eventsToShow);
+  });
+
+  const onFilterChange = $((event: "all" | taskStatus) => {
+    statusFilter.value = event;
+    filterEvents(event);
   });
 
   return (
     <div class="min-h-screen p-4 bg-base-200 rounded-box">
       <CalendarStatusFilter
-        handleStatusFilterChange={handleStatusFilterChange}
-        currentStatusFilter={currentStatusFilter}
+        currentStatusFilter={statusFilter}
+        handleStatusFilterChange={onFilterChange}
       />
       <div id="calendar" />
       <TaskModal
