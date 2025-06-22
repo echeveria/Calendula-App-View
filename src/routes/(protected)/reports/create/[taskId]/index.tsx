@@ -69,7 +69,7 @@ export default component$(() => {
   return (
     <div class="min-h-screen bg-base-200 p-4">
       <div class="max-w-md mx-auto">
-        <h1 class="text-3xl font-bold mb-6">Създай рапорт</h1>
+        <h1 class="text-3xl font-bold mb-6">Създай репорт</h1>
 
         {errorSignal.value && (
           <div class="alert alert-error mb-4">
@@ -100,7 +100,6 @@ export default component$(() => {
               isLoading={isLoading}
               title="Нов Репорт"
               btnTitle="Запази"
-              showMarkedAsRead={false}
             />
             <div class="text-center mt-4">
               <a href="/reports" class="link link-primary">

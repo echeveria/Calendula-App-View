@@ -10,7 +10,6 @@ export interface ReportFormProps {
   btnTitle?: string;
   id?: string;
   handleDelete?: () => void;
-  showMarkedAsRead?: boolean;
 }
 
 export const ReportForm = component$<ReportFormProps>((props) => {
@@ -24,7 +23,6 @@ export const ReportForm = component$<ReportFormProps>((props) => {
     title = "Нов рапорт",
     btnTitle,
     id,
-    showMarkedAsRead = true,
   } = props;
 
   return (
@@ -32,19 +30,17 @@ export const ReportForm = component$<ReportFormProps>((props) => {
       <div class="flex justify-between items-center mb-4">
         <h3 class="font-bold text-lg">{title}</h3>
       </div>
-      {showMarkedAsRead && (
-        <div class="form-control">
-          <label class="label cursor-pointer">
-            <span class="label-text mr-2">Маркирай като прочетено</span>
-            <input
-              type="checkbox"
-              class="toggle toggle-primary"
-              checked={markedAsReadSignal.value}
-              onChange$={(e) => (markedAsReadSignal.value = (e.target as HTMLInputElement).checked)}
-            />
-          </label>
-        </div>
-      )}
+      <div class="form-control">
+        <label class="label cursor-pointer">
+          <span class="label-text mr-2">Маркирай като прочетено</span>
+          <input
+            type="checkbox"
+            class="toggle toggle-primary"
+            checked={markedAsReadSignal.value}
+            onChange$={(e) => (markedAsReadSignal.value = (e.target as HTMLInputElement).checked)}
+          />
+        </label>
+      </div>
       <div class="form-control">
         <label class="label" for="title">
           <span class="label-text">Заглавие</span>

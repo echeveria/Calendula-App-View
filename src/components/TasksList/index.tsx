@@ -9,7 +9,7 @@ export interface TasksListProps {
   showCreateButton?: boolean;
 }
 
-type FilterType = "all" | "old" | "today" | "future" | "with_images";
+type FilterType = "all" | "old" | "today" | "future";
 
 export const TasksList = component$<TasksListProps>(
   ({
@@ -56,9 +56,6 @@ export const TasksList = component$<TasksListProps>(
               break;
             case "future":
               filterStr = `due_date > "${new Date(today.getTime() + 24 * 60 * 60 * 1000).toISOString()}"`;
-              break;
-            case "with_images":
-              filterStr = `images!=null && images!='[]'`;
               break;
             case "all":
             default:
@@ -172,12 +169,6 @@ export const TasksList = component$<TasksListProps>(
               onClick$={() => handleFilterChange("future")}
             >
               Бъдещи
-            </button>
-            <button
-              class={`btn btn-sm ${currentFilter.value === "with_images" ? "btn-primary" : "btn-outline"}`}
-              onClick$={() => handleFilterChange("with_images")}
-            >
-              Със снимка
             </button>
           </div>
 
