@@ -1,8 +1,10 @@
 import { component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
-import { DocumentHead } from "@builder.io/qwik-city";
+import { DocumentHead, useNavigate } from "@builder.io/qwik-city";
 import { pb, getAuthToken } from "~/utils/pocketbase";
 
 export default component$(() => {
+  const navigate = useNavigate();
+
   const gardensSignal = useSignal<any[]>([]);
   const isLoading = useSignal(true);
   const errorSignal = useSignal("");
@@ -21,6 +23,9 @@ export default component$(() => {
           sort: "title",
         });
 
+        if (response.items.length === 1) {
+          navigate(`/gardens/details/${response.items[0].id}`);
+        }
         gardensSignal.value = response.items || [];
       } catch (err: any) {
         errorSignal.value = err.message || "Failed to load gardens";
