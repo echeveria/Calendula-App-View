@@ -121,7 +121,7 @@ export const Navigation = component$(() => {
         </div>
         <a href="/" class="flex items-center text-xl">
           <img src={logo} width="50" height="50" />
-          ДворЧек
+          Calendula App
         </a>
       </div>
       <div class="navbar-center hidden lg:flex">
