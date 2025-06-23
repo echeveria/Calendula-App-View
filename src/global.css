@@ -1,2 +1,34 @@
 @import "tailwindcss";
 @plugin "daisyui";
+@media print {
+  body,
+  html {
+    margin: 0;
+    padding: 0;
+  }
+
+  body * {
+    visibility: hidden !important;
+  }
+
+  #garden-calendar,
+  #garden-calendar * {
+    visibility: visible !important;
+  }
+
+  #garden-calendar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: white;
+    padding: 0;
+    margin: 0;
+    box-shadow: none !important;
+  }
+
+  /* Скрий бутони, заглавия и други */
+  .object-info {
+    display: none !important;
+  }
+}

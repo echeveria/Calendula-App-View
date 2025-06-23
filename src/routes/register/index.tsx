@@ -50,8 +50,7 @@ export default component$(() => {
       }
     } catch (error) {
       console.error("Registration error:", error);
-      errorSignal.value =
-        "An error occurred during registration. Please try again.";
+      errorSignal.value = "An error occurred during registration. Please try again.";
     } finally {
       isLoading.value = false;
     }
@@ -69,9 +68,7 @@ export default component$(() => {
     <div class="flex min-h-screen items-center justify-center bg-base-200">
       <div class="card w-full max-w-md bg-base-100 shadow-xl">
         <div class="card-body">
-          <h2 class="card-title text-2xl font-bold text-center mb-6">
-            Register
-          </h2>
+          <h2 class="card-title text-2xl font-bold text-center mb-6">Регистрация</h2>
 
           {errorSignal.value && (
             <div class="alert alert-error mb-4">
@@ -92,23 +89,17 @@ export default component$(() => {
             </div>
           )}
 
-          <form
-            preventdefault:submit
-            onSubmit$={handleRegister}
-            class="space-y-4"
-          >
+          <form preventdefault:submit onSubmit$={handleRegister} class="space-y-4">
             <div class="form-control">
               <label class="label" for="name">
-                <span class="label-text">Full Name</span>
+                <span class="label-text">Две имена</span>
               </label>
               <input
                 id="name"
                 type="text"
                 class="input input-bordered w-full"
                 value={nameSignal.value}
-                onInput$={(e) =>
-                  (nameSignal.value = (e.target as HTMLInputElement).value)
-                }
+                onInput$={(e) => (nameSignal.value = (e.target as HTMLInputElement).value)}
                 placeholder="John Doe"
                 required
               />
@@ -116,16 +107,14 @@ export default component$(() => {
 
             <div class="form-control">
               <label class="label" for="email">
-                <span class="label-text">Email</span>
+                <span class="label-text">Имейл</span>
               </label>
               <input
                 id="email"
                 type="email"
                 class="input input-bordered w-full"
                 value={emailSignal.value}
-                onInput$={(e) =>
-                  (emailSignal.value = (e.target as HTMLInputElement).value)
-                }
+                onInput$={(e) => (emailSignal.value = (e.target as HTMLInputElement).value)}
                 placeholder="example@email.com"
                 required
               />
@@ -133,23 +122,21 @@ export default component$(() => {
 
             <div class="form-control">
               <label class="label" for="password">
-                <span class="label-text">Password</span>
+                <span class="label-text">Паарола</span>
               </label>
               <input
                 id="password"
                 type="password"
                 class="input input-bordered w-full"
                 value={passwordSignal.value}
-                onInput$={(e) =>
-                  (passwordSignal.value = (e.target as HTMLInputElement).value)
-                }
+                onInput$={(e) => (passwordSignal.value = (e.target as HTMLInputElement).value)}
                 required
               />
             </div>
 
             <div class="form-control">
               <label class="label" for="confirmPassword">
-                <span class="label-text">Confirm Password</span>
+                <span class="label-text">Потвърди парола</span>
               </label>
               <input
                 id="confirmPassword"
@@ -157,9 +144,7 @@ export default component$(() => {
                 class="input input-bordered w-full"
                 value={confirmPasswordSignal.value}
                 onInput$={(e) =>
-                  (confirmPasswordSignal.value = (
-                    e.target as HTMLInputElement
-                  ).value)
+                  (confirmPasswordSignal.value = (e.target as HTMLInputElement).value)
                 }
                 required
               />
@@ -171,15 +156,15 @@ export default component$(() => {
                 class={`btn btn-primary ${isLoading.value ? "loading" : ""}`}
                 disabled={isLoading.value}
               >
-                {isLoading.value ? "Registering..." : "Register"}
+                {isLoading.value ? "Регистриране..." : "Регистрация"}
               </button>
             </div>
 
             <div class="text-center mt-4">
               <p>
-                Already have an account?{" "}
+                Вече имате акаунт?{" "}
                 <a href="/login" class="link link-primary">
-                  Login
+                  Вход
                 </a>
               </p>
             </div>

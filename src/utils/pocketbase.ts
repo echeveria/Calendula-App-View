@@ -1,7 +1,7 @@
 import PocketBase from "pocketbase";
 
 // PocketBase URL - can be configured via environment variables
-const POCKETBASE_URL = "http://212.5.157.179:8090";
+const POCKETBASE_URL = "http://gradinapp-db-mwnxnm-ac40a0-161-97-86-243.traefik.me/"; // "http://212.5.157.179:8090";
 //  "http://gradinapp-db-mwnxnm-ac40a0-161-97-86-243.traefik.me/";
 
 // Create and export a PocketBase client instance

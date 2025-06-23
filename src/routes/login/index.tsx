@@ -1,11 +1,6 @@
 import { component$, useSignal, $, useVisibleTask$ } from "@builder.io/qwik";
 import { useNavigate, type DocumentHead } from "@builder.io/qwik-city";
-import {
-  pb,
-  setAuthToken,
-  clearAuthToken,
-  setUserInfo,
-} from "~/utils/pocketbase";
+import { pb, setAuthToken, clearAuthToken, setUserInfo } from "~/utils/pocketbase";
 
 export default component$(() => {
   const navigate = useNavigate();
@@ -31,7 +26,7 @@ export default component$(() => {
 
     try {
       if (!usernameSignal.value || !passwordSignal.value) {
-        errorSignal.value = "Please enter both username and password";
+        errorSignal.value = "Моля въведете имайл и парола";
         isLoading.value = false;
         return;
       }
@@ -42,7 +37,7 @@ export default component$(() => {
           .collection("users")
           .authWithPassword(usernameSignal.value, passwordSignal.value);
 
-        console.log("Login successful:", authData);
+        console.log("Успешно влизане:", authData);
 
         // Store auth token and user email
         setAuthToken(pb.authStore.token);
@@ -60,12 +55,12 @@ export default component$(() => {
         // Redirect to calendar page
         window.location.href = "/calendar";
       } catch (err: any) {
-        errorSignal.value = err.message || "Authentication failed";
-        console.error("Login error:", err);
+        errorSignal.value = err.message || "Неуспешна автентикация";
+        console.error("Грешка при влод:", err);
       }
     } catch (error) {
-      console.error("Login error:", error);
-      errorSignal.value = "An error occurred during login. Please try again.";
+      console.error("Грешка при влод:", error);
+      errorSignal.value = "Възникна грешка. Опитайте отново.";
     } finally {
       isLoading.value = false;
     }
@@ -84,7 +79,7 @@ export default component$(() => {
       <div class="card w-full max-w-md bg-base-100 shadow-xl">
         <div class="card-body">
           <h2 class="card-title text-2xl font-bold text-center mb-6">
-            {isLoggedIn.value ? "User Information" : "Login"}
+            {isLoggedIn.value ? "Информация за потребителя" : "Вход"}
           </h2>
 
           {errorSignal.value && (
@@ -120,36 +115,28 @@ export default component$(() => {
               </div>
 
               <div class="text-center">
-                <h3 class="text-lg font-semibold mb-2">Email:</h3>
+                <h3 class="text-lg font-semibold mb-2">Имейл:</h3>
                 <p class="text-gray-600 mb-6">{userEmail.value}</p>
               </div>
 
               <div class="form-control">
                 <button onClick$={handleLogout} class="btn btn-primary">
-                  Logout
+                  Вход
                 </button>
               </div>
             </div>
           ) : (
-            <form
-              preventdefault:submit
-              onSubmit$={handleLogin}
-              class="space-y-4"
-            >
+            <form preventdefault:submit onSubmit$={handleLogin} class="space-y-4">
               <div class="form-control">
                 <label class="label" for="username">
-                  <span class="label-text">Email</span>
+                  <span class="label-text">Имейл</span>
                 </label>
                 <input
                   id="username"
                   type="email"
                   class="input input-bordered w-full"
                   value={usernameSignal.value}
-                  onInput$={(e) =>
-                    (usernameSignal.value = (
-                      e.target as HTMLInputElement
-                    ).value)
-                  }
+                  onInput$={(e) => (usernameSignal.value = (e.target as HTMLInputElement).value)}
                   placeholder="example@email.com"
                   required
                 />
@@ -157,25 +144,21 @@ export default component$(() => {
 
               <div class="form-control">
                 <label class="label" for="password">
-                  <span class="label-text">Password</span>
+                  <span class="label-text">Парола</span>
                 </label>
                 <input
                   id="password"
                   type="password"
                   class="input input-bordered w-full"
                   value={passwordSignal.value}
-                  onInput$={(e) =>
-                    (passwordSignal.value = (
-                      e.target as HTMLInputElement
-                    ).value)
-                  }
+                  onInput$={(e) => (passwordSignal.value = (e.target as HTMLInputElement).value)}
                   required
                 />
-                <label class="label">
-                  <a href="#" class="label-text-alt link link-hover">
-                    Forgot password?
-                  </a>
-                </label>
+                {/*<label class="label">*/}
+                {/*  <a href="#" class="label-text-alt link link-hover">*/}
+                {/*    Forgot password?*/}
+                {/*  </a>*/}
+                {/*</label>*/}
               </div>
 
               <div class="form-control mt-6">
@@ -184,7 +167,7 @@ export default component$(() => {
                   class={`btn btn-primary ${isLoading.value ? "loading" : ""}`}
                   disabled={isLoading.value}
                 >
-                  {isLoading.value ? "Logging in..." : "Login"}
+                  {isLoading.value ? "Влизане..." : "Вход"}
                 </button>
               </div>
 
