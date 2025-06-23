@@ -99,7 +99,7 @@ export default component$(() => {
                   <li>Преглед по дни, седмици и месеци</li>
                 </ul>
                 <div class="card-actions justify-end mt-4">
-                  <a href="/calendar" class="btn btn-primary">
+                  <a href="/calendar-info" class="btn btn-primary">
                     Научете повече
                   </a>
                 </div>
@@ -118,7 +118,7 @@ export default component$(() => {
                   <li>Формат за принтиране</li>
                 </ul>
                 <div class="card-actions justify-end mt-4">
-                  <a href="/reports" class="btn btn-primary">
+                  <a href="/reports-info" class="btn btn-primary">
                     Научете повече
                   </a>
                 </div>

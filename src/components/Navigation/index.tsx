@@ -27,7 +27,7 @@ export const Navigation = component$(() => {
   });
 
   return (
-    <div class="navbar bg-base-100 shadow-md">
+    <div class="navbar bg-base-100 shadow-md sticky top-0 z-50">
       <div class="navbar-start">
         <div class="dropdown">
           <div
