@@ -173,9 +173,9 @@ export default component$(() => {
 
               <div class="text-center mt-4">
                 <p>
-                  Don't have an account?{" "}
+                  Нямате регистрация?{" "}
                   <a href="/register" class="link link-primary">
-                    Register
+                    Регистрирай се
                   </a>
                 </p>
               </div>

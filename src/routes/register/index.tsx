@@ -21,13 +21,13 @@ export default component$(() => {
         !confirmPasswordSignal.value ||
         !nameSignal.value
       ) {
-        errorSignal.value = "Please fill in all fields";
+        errorSignal.value = "Моля попълнете всички полета!";
         isLoading.value = false;
         return;
       }
 
       if (passwordSignal.value !== confirmPasswordSignal.value) {
-        errorSignal.value = "Passwords do not match";
+        errorSignal.value = "Паролите не съвпадат";
         isLoading.value = false;
         return;
       }
@@ -45,12 +45,12 @@ export default component$(() => {
         // Redirect to login page
         window.location.href = "/login";
       } catch (err: any) {
-        errorSignal.value = err.message || "Registration failed";
-        console.error("Registration error:", err);
+        errorSignal.value = err.message || "Грешка при регистрация";
+        console.error("Грешка при регистрация:", err);
       }
     } catch (error) {
       console.error("Registration error:", error);
-      errorSignal.value = "An error occurred during registration. Please try again.";
+      errorSignal.value = "Възникна грешка при регистрацията. Моля опитайте отново.";
     } finally {
       isLoading.value = false;
     }
