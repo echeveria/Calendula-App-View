@@ -20,7 +20,8 @@
     "lint": "eslint \"src/**/*.ts*\"",
     "preview": "qwik build preview && vite preview --host 0.0.0.0",
     "start": "vite --open --mode ssr",
-    "qwik": "qwik"
+    "qwik": "qwik",
+    "qwik-speak-extract": "qwik-speak-extract --supportedLangs=en-US,bg-BG --assetsPath=i18n"
   },
   "devDependencies": {
     "@builder.io/qwik": "^1.14.1",
@@ -31,6 +32,7 @@
     "eslint-plugin-qwik": "^1.14.1",
     "globals": "16.0.0",
     "prettier": "3.3.3",
+    "qwik-speak": "^0.23.1",
     "typescript": "5.4.5",
     "typescript-eslint": "8.26.1",
     "undici": "*",
@@ -38,16 +40,16 @@
     "vite-tsconfig-paths": "^4.2.1"
   },
   "dependencies": {
-  "@fullcalendar/core": "^6.1.17",
-  "@fullcalendar/daygrid": "^6.1.17",
-  "@fullcalendar/interaction": "^6.1.17",
-  "@fullcalendar/list": "^6.1.17",
-  "@fullcalendar/timegrid": "^6.1.17",
-  "@tailwindcss/vite": "^4.1.7",
-  "daisyui": "^5.0.37",
-  "fullcalendar": "^6.1.17",
-  "pocketbase": "^0.26.1",
-  "tailwindcss": "^4.1.7"
-},
+    "@fullcalendar/core": "^6.1.17",
+    "@fullcalendar/daygrid": "^6.1.17",
+    "@fullcalendar/interaction": "^6.1.17",
+    "@fullcalendar/list": "^6.1.17",
+    "@fullcalendar/timegrid": "^6.1.17",
+    "@tailwindcss/vite": "^4.1.7",
+    "daisyui": "^5.0.37",
+    "fullcalendar": "^6.1.17",
+    "pocketbase": "^0.26.1",
+    "tailwindcss": "^4.1.7"
+  },
   "packageManger": "pnpm@10.12.1"
 }

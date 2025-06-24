@@ -1,0 +1,14 @@
+{
+  "app": {
+    "changeLocale": "Change locale",
+    "head": {
+      "home": {
+        "description": "Localized routing",
+        "title": "{{name}}"
+      }
+    },
+    "title": "{{name}} demo"
+  },
+  "dates": "Dates",
+  "numbers": "Numbers"
+}

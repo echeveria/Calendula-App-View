@@ -1,9 +1,10 @@
 import { component$, useSignal, $, useVisibleTask$ } from "@builder.io/qwik";
 import { pb, getAuthToken } from "~/utils/pocketbase";
+import { Pagination } from "~/components/Pagination";
 
 export interface GardensListProps {
   onGardenSelected?: (gardenId: string) => void;
-  onRefresh?: () => void;
+  onRefresh?: (gardens?: any[]) => void;
   showActions?: boolean;
   showCreateButton?: boolean;
 }
@@ -16,10 +17,12 @@ export const GardensList = component$<GardensListProps>(
     showCreateButton = true,
   }) => {
     const isLoading = useSignal(false);
-    const isDeleting = useSignal(false);
     const gardens = useSignal<any[]>([]);
     const errorSignal = useSignal("");
     const successSignal = useSignal("");
+    const currentPage = useSignal(1);
+    const totalPages = useSignal(1);
+    const itemsPerPage = 10;
 
     // Function to load gardens from PocketBase
     const loadGardens = $(async () => {
@@ -31,7 +34,7 @@ export const GardensList = component$<GardensListProps>(
         pb.authStore.save(getAuthToken() || "", null);
 
         try {
-          const response = await pb.collection("gardens").getList(1, 50, {
+          const response = await pb.collection("gardens").getList(currentPage.value, itemsPerPage, {
             sort: "title",
           });
 
@@ -43,7 +46,10 @@ export const GardensList = component$<GardensListProps>(
             return Object.values(map);
           }
           gardens.value = deduplicateById(response.items) || [];
-          onRefresh();
+
+          // Calculate total pages
+          totalPages.value = Math.ceil(response.totalItems / itemsPerPage);
+          onRefresh(gardens.value);
         } catch (err: any) {
           errorSignal.value = err.message || "Failed to load gardens";
           console.error("Error loading gardens:", err);
@@ -56,41 +62,34 @@ export const GardensList = component$<GardensListProps>(
       }
     });
 
+    // Function to handle page navigation
+    const goToPage = $((page: number) => {
+      if (page < 1 || page > totalPages.value) return;
+      currentPage.value = page;
+      loadGardens();
+    });
+
+    // Function to go to next page
+    const nextPage = $(() => {
+      if (currentPage.value < totalPages.value) {
+        currentPage.value++;
+        loadGardens();
+      }
+    });
+
+    // Function to go to previous page
+    const prevPage = $(() => {
+      if (currentPage.value > 1) {
+        currentPage.value--;
+        loadGardens();
+      }
+    });
+
     // Load gardens when component mounts
     useVisibleTask$(async () => {
       await loadGardens();
     });
 
-    // Function to delete a garden
-    const deleteGarden = $(async (gardenId: string) => {
-      if (!confirm("Are you sure you want to delete this garden?")) {
-        return;
-      }
-
-      isDeleting.value = true;
-      errorSignal.value = "";
-      successSignal.value = "";
-
-      try {
-        // Set the auth token for the request
-        pb.authStore.save(getAuthToken() || "", null);
-
-        try {
-          await pb.collection("gardens").delete(gardenId);
-          successSignal.value = "Garden deleted successfully";
-          // Refresh the garden list
-          await loadGardens();
-        } catch (err: any) {
-          errorSignal.value = err.message || "Failed to delete garden";
-          console.error("Error deleting garden:", err);
-        }
-      } catch (error) {
-        console.error("Error deleting garden:", error);
-        errorSignal.value = "An error occurred while deleting the garden";
-      } finally {
-        isDeleting.value = false;
-      }
-    });
 
     return (
       <div class="card bg-base-100 shadow-xl mb-6">
@@ -164,18 +163,9 @@ export const GardensList = component$<GardensListProps>(
                         Детайли
                       </a>
                       {showActions && (
-                        <>
-                          <a href={`/gardens/edit/${garden.id}`} class="btn btn-sm btn-secondary">
-                            Редактирай
-                          </a>
-                          <button
-                            class={`btn btn-sm btn-error ${isDeleting.value ? "loading" : ""}`}
-                            onClick$={() => deleteGarden(garden.id)}
-                            disabled={isDeleting.value}
-                          >
-                            Изтрий
-                          </button>
-                        </>
+                        <a href={`/gardens/edit/${garden.id}`} class="btn btn-sm btn-secondary">
+                          Редактирай
+                        </a>
                       )}
                     </div>
                   </div>
@@ -183,6 +173,16 @@ export const GardensList = component$<GardensListProps>(
               ))}
             </div>
           )}
+
+          {/* Pagination controls */}
+
+          <Pagination
+            currentPage={currentPage.value}
+            totalPages={totalPages.value}
+            onPrevPage={prevPage}
+            onNextPage={nextPage}
+            onGoToPage={goToPage}
+          />
 
           {showCreateButton && (
             <div class="card-actions justify-end mt-4">

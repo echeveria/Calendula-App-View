@@ -15,6 +15,18 @@ export const statusToColor = (status: taskStatus): string => {
       return "green";
   }
 };
+export const statusToClass = (status: taskStatus): string => {
+  switch (status) {
+    case "pending":
+      return "badge-ghost";
+    case "in_progress":
+      return "badge-warning";
+    case "canceled":
+      return "badge-error";
+    default:
+      return "badge-success";
+  }
+};
 
 export function formatStatus(str: string): string {
   return str

@@ -1,6 +1,7 @@
 import { component$, useSignal, $, useVisibleTask$ } from "@builder.io/qwik";
 import { pb, getAuthToken, isLoggedIn } from "~/utils/pocketbase";
 import { useLocation } from "@builder.io/qwik-city";
+import { Pagination } from "~/components/Pagination";
 
 export interface ReportsListProps {
   onReportSelected?: (reportId: string) => void;
@@ -26,6 +27,9 @@ export const ReportsList = component$<ReportsListProps>(
     const errorSignal = useSignal("");
     const successSignal = useSignal("");
     const currentFilter = useSignal<FilterType>("all");
+    const currentPage = useSignal(1);
+    const totalPages = useSignal(1);
+    const itemsPerPage = 20;
 
     // Function to load reports from PocketBase
     const loadReports = $(async () => {
@@ -73,7 +77,7 @@ export const ReportsList = component$<ReportsListProps>(
 
           const filter = filterStr ? { filter: filterStr } : undefined;
 
-          const response = await pb.collection("reports").getList(1, 50, {
+          const response = await pb.collection("reports").getList(currentPage.value, itemsPerPage, {
             sort: "-created",
             expand: "_task, _task._garden",
             ...filter,
@@ -87,6 +91,9 @@ export const ReportsList = component$<ReportsListProps>(
             return Object.values(map);
           }
           reports.value = deduplicateById(response.items) || [];
+
+          // Calculate total pages
+          totalPages.value = Math.ceil(response.totalItems / itemsPerPage);
           onRefresh();
         } catch (err: any) {
           errorSignal.value = err.message || "Failed to load reports";
@@ -103,7 +110,31 @@ export const ReportsList = component$<ReportsListProps>(
     // Function to handle filter changes
     const handleFilterChange = $((filter: FilterType) => {
       currentFilter.value = filter;
+      currentPage.value = 1; // Reset to first page when filter changes
       loadReports();
+    });
+
+    // Function to handle page navigation
+    const goToPage = $((page: number) => {
+      if (page < 1 || page > totalPages.value) return;
+      currentPage.value = page;
+      loadReports();
+    });
+
+    // Function to go to next page
+    const nextPage = $(() => {
+      if (currentPage.value < totalPages.value) {
+        currentPage.value++;
+        loadReports();
+      }
+    });
+
+    // Function to go to previous page
+    const prevPage = $(() => {
+      if (currentPage.value > 1) {
+        currentPage.value--;
+        loadReports();
+      }
     });
 
     // Load reports when component mounts
@@ -280,6 +311,17 @@ export const ReportsList = component$<ReportsListProps>(
                 </tbody>
               </table>
             </div>
+          )}
+
+          {/* Pagination controls */}
+          {!isLoading.value && reports.value.length > 0 && (
+            <Pagination
+              currentPage={currentPage.value}
+              totalPages={totalPages.value}
+              onPrevPage={prevPage}
+              onNextPage={nextPage}
+              onGoToPage={goToPage}
+            />
           )}
 
           {showCreateButton && (

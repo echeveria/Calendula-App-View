@@ -191,6 +191,7 @@ export const Navigation = component$(() => {
         </ul>
       </div>
       <div class="navbar-end">
+        {/*<ChangeLocale />*/}
         {isLoggedIn.value && (
           <div class="dropdown dropdown-end">
             <div tabIndex={0} role="button" class="btn btn-ghost btn-circle avatar">

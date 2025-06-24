@@ -1,6 +1,7 @@
 import { component$, useSignal, $, useVisibleTask$ } from "@builder.io/qwik";
 import { pb, getAuthToken, isLoggedIn } from "~/utils/pocketbase";
-import { formatStatus } from "~/utils/views";
+import { formatStatus, statusToClass } from "~/utils/views";
+import { Pagination } from "~/components/Pagination";
 
 export interface TasksListProps {
   onTaskSelected?: (taskId: string) => void;
@@ -24,6 +25,9 @@ export const TasksList = component$<TasksListProps>(
     const errorSignal = useSignal("");
     const successSignal = useSignal("");
     const currentFilter = useSignal<FilterType>("all");
+    const currentPage = useSignal(1);
+    const totalPages = useSignal(1);
+    const itemsPerPage = 20;
 
     // Function to load tasks from PocketBase
     const loadTasks = $(async () => {
@@ -65,7 +69,7 @@ export const TasksList = component$<TasksListProps>(
 
           const filter = filterStr ? { filter: filterStr } : undefined;
 
-          const response = await pb.collection("tasks").getList(1, 50, {
+          const response = await pb.collection("tasks").getList(currentPage.value, itemsPerPage, {
             sort: "-created",
             expand: "_garden",
             ...filter,
@@ -80,6 +84,9 @@ export const TasksList = component$<TasksListProps>(
             return Object.values(map);
           }
           tasks.value = deduplicateById(response.items) || [];
+
+          // Calculate total pages
+          totalPages.value = Math.ceil(response.totalItems / itemsPerPage);
           onRefresh();
         } catch (err: any) {
           errorSignal.value = err.message || "Failed to load tasks";
@@ -96,7 +103,31 @@ export const TasksList = component$<TasksListProps>(
     // Function to handle filter changes
     const handleFilterChange = $((filter: FilterType) => {
       currentFilter.value = filter;
+      currentPage.value = 1; // Reset to first page when filter changes
       loadTasks();
+    });
+
+    // Function to handle page navigation
+    const goToPage = $((page: number) => {
+      if (page < 1 || page > totalPages.value) return;
+      currentPage.value = page;
+      loadTasks();
+    });
+
+    // Function to go to next page
+    const nextPage = $(() => {
+      if (currentPage.value < totalPages.value) {
+        currentPage.value++;
+        loadTasks();
+      }
+    });
+
+    // Function to go to previous page
+    const prevPage = $(() => {
+      if (currentPage.value > 1) {
+        currentPage.value--;
+        loadTasks();
+      }
     });
 
     // Load tasks when component mounts
@@ -238,15 +269,7 @@ export const TasksList = component$<TasksListProps>(
                     >
                       <td>{task.expand._garden.title}</td>
                       <td>
-                        <span
-                          class={`badge ${
-                            task.status === "completed"
-                              ? "badge-success"
-                              : task.status === "in_progress"
-                                ? "badge-warning"
-                                : "badge-ghost"
-                          }`}
-                        >
+                        <span class={`badge ${statusToClass(task.status)}`}>
                           {formatStatus(task.status)}
                         </span>
                       </td>
@@ -272,6 +295,17 @@ export const TasksList = component$<TasksListProps>(
                 </tbody>
               </table>
             </div>
+          )}
+
+          {/* Pagination controls */}
+          {!isLoading.value && tasks.value.length > 0 && (
+            <Pagination
+              currentPage={currentPage.value}
+              totalPages={totalPages.value}
+              onPrevPage={prevPage}
+              onNextPage={nextPage}
+              onGoToPage={goToPage}
+            />
           )}
 
           {showCreateButton && (
