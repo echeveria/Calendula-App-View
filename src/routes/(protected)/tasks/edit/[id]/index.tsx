@@ -110,7 +110,7 @@ export default component$(() => {
 
   return (
     <div class="min-h-screen bg-base-200 p-4">
-      <div class="max-w-md mx-auto">
+      <div class="max-w-md md:max-w-2xl lg:max-w-3xl mx-auto">
         <h1 class="text-3xl font-bold mb-6">Редакция</h1>
 
         {errorSignal.value && (

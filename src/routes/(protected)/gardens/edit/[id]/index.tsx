@@ -2,6 +2,7 @@ import { component$, useSignal, $, useVisibleTask$, NoSerialize } from "@builder
 import { useNavigate, useLocation, type DocumentHead } from "@builder.io/qwik-city";
 import { pb, getAuthToken } from "~/utils/pocketbase";
 import { handleImageDelete, handleImageUpload } from "~/utils/views";
+import { RichTextEditor } from "~/components/RichTextEditor";
 
 export default component$(() => {
   const navigate = useNavigate();
@@ -108,7 +109,7 @@ export default component$(() => {
 
   return (
     <div class="min-h-screen bg-base-200 p-4">
-      <div class="max-w-md mx-auto">
+      <div class="max-w-md md:max-w-2xl lg:max-w-3xl mx-auto">
         <h1 class="text-3xl font-bold mb-6">Редакция на обект</h1>
 
         {errorSignal.value && (
@@ -189,11 +190,11 @@ export default component$(() => {
                   <label class="label">
                     <span class="label-text">Описание</span>
                   </label>
-                  <textarea
-                    class="textarea textarea-bordered h-24 w-full"
-                    value={descriptionSignal.value}
-                    onInput$={(e: any) => (descriptionSignal.value = e.target.value)}
-                  ></textarea>
+                  <RichTextEditor
+                    content={descriptionSignal}
+                    placeholder="Въведете описание..."
+                    height="h-64"
+                  />
                 </div>
 
                 <div class="form-control">

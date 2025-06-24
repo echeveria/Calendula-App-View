@@ -1,4 +1,5 @@
 import { component$, Signal } from "@builder.io/qwik";
+import { RichTextEditor } from "~/components/RichTextEditor";
 
 export interface ReportFormProps {
   handleSubmit: () => void;
@@ -59,14 +60,11 @@ export const ReportForm = component$<ReportFormProps>((props) => {
         <label class="label" for="content">
           <span class="label-text">Съдържание</span>
         </label>
-        <textarea
-          id="content"
-          class="textarea textarea-bordered h-24 w-full"
-          value={contentSignal.value}
-          onInput$={(e) => (contentSignal.value = (e.target as HTMLTextAreaElement).value)}
+        <RichTextEditor
+          content={contentSignal}
           placeholder="Въведете съдържание..."
-          required
-        ></textarea>
+          height="h-64"
+        />
       </div>
       <div class="form-control mt-6">
         <div class="join flex justify-between">

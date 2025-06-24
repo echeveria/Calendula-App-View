@@ -1,10 +1,4 @@
-import {
-  component$,
-  useSignal,
-  $,
-  useVisibleTask$,
-  NoSerialize,
-} from "@builder.io/qwik";
+import { component$, useSignal, $, useVisibleTask$, NoSerialize } from "@builder.io/qwik";
 import { TaskForm } from "~/components/TaskForm/TaskForm";
 import { pb, getAuthToken, getUserInfo } from "~/utils/pocketbase";
 import { handleImageDelete, handleImageUpload } from "~/utils/views";
@@ -27,6 +21,7 @@ export const TaskModal = component$<TaskModalProps>((props) => {
   const errorSignal = useSignal("");
   const isLoading = useSignal(false);
   const totalReportsSignal = useSignal<number | undefined>(undefined);
+  const readSignal = useSignal<number>(0);
   const imagesPreviewSignal = useSignal<NoSerialize<string[]>>(undefined);
   const imagesSignal = useSignal<NoSerialize<File[]>>(undefined);
 
@@ -53,18 +48,16 @@ export const TaskModal = component$<TaskModalProps>((props) => {
         });
         totalReportsSignal.value = reports.totalItems;
 
+        readSignal.value = reports.items.filter((item: any) => item.marked_as_read !== true).length;
+
         if (task) {
           nameSignal.value = task.expand?._garden.title || "";
           infoSignal.value = task.info || "";
           statusSignal.value = task.status || "pending";
           gardenSignal.value = task.expand?._garden.id || null;
-          dateSignal.value = task.due_date
-            ? new Date(task.due_date).toISOString()
-            : "";
+          dateSignal.value = task.due_date ? new Date(task.due_date).toISOString() : "";
           imagesSignal.value = task.images || [];
-          imagesPreviewSignal.value = task.images.map((img: any) =>
-            pb.files.getURL(task, img),
-          );
+          imagesPreviewSignal.value = task.images.map((img: any) => pb.files.getURL(task, img));
         }
       } catch (error) {
         console.error("Error loading task:", error);
@@ -179,12 +172,15 @@ export const TaskModal = component$<TaskModalProps>((props) => {
           </div>
         )}
         <div class="modal-title flex justify-end">
-          <a href={`/reports/?taskId=${id}`} class="btn">
-            Рапорти
-            <div class="badge badge-sm badge-secondary">
-              {totalReportsSignal.value || 0}
-            </div>
-          </a>
+          {!readSignal.value ||
+            (totalReportsSignal.value && (
+              <a
+                href={`/reports/?taskId=${id}`}
+                class={`badge badge-sm ${readSignal.value > 0 ? "badge-warning" : undefined}`}
+              >
+                {readSignal.value} от {totalReportsSignal.value || 0} непрочетени
+              </a>
+            ))}
         </div>
         <TaskForm
           handleSubmit={handleSubmit}
@@ -197,13 +193,13 @@ export const TaskModal = component$<TaskModalProps>((props) => {
           btnTitle={"Запази"}
           title={nameSignal.value || "Нова Задача"}
           id={id}
-          totalReports={totalReportsSignal.value}
+          totalReports={readSignal.value}
           handleImageUpload={$((files: File[]) =>
-            handleImageUpload(files, imagesSignal, imagesPreviewSignal),
+            handleImageUpload(files, imagesSignal, imagesPreviewSignal)
           )}
           images={imagesPreviewSignal.value}
           handleImageDelete={$((index: number) =>
-            handleImageDelete(index, imagesSignal, imagesPreviewSignal),
+            handleImageDelete(index, imagesSignal, imagesPreviewSignal)
           )}
         />
         <div class="modal-action">

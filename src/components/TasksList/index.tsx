@@ -74,7 +74,6 @@ export const TasksList = component$<TasksListProps>(
             expand: "_garden",
             ...filter,
           });
-          console.log(response);
 
           function deduplicateById<T extends { id: string }>(items: T[]): T[] {
             const map: Record<string, T> = {};

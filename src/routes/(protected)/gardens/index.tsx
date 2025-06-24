@@ -1,10 +1,9 @@
-import { component$, $, useSignal } from "@builder.io/qwik";
+import { component$, $ } from "@builder.io/qwik";
 import { DocumentHead, useNavigate } from "@builder.io/qwik-city";
 import { GardensList } from "~/components/GardensList";
 
 export default component$(() => {
   const navigate = useNavigate();
-  const gardensSignal = useSignal<any[]>([]);
 
   // Function to handle garden list refresh and check if there's only one garden
   const handleRefresh = $((gardens?: any[]) => {
@@ -17,11 +16,7 @@ export default component$(() => {
     <div class="container mx-auto p-4">
       <h1 class="text-2xl font-bold mb-6">Обекти</h1>
 
-      <GardensList
-        onRefresh={handleRefresh}
-        showActions={true}
-        showCreateButton={true}
-      />
+      <GardensList onRefresh={handleRefresh} showActions={true} showCreateButton={true} />
     </div>
   );
 });

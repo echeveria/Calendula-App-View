@@ -1,6 +1,7 @@
 import { $, component$, Signal, useSignal } from "@builder.io/qwik";
 import { GardensSelector } from "~/components/GardensSelector";
-import { taskStatusValue } from "~/utils/views";
+import { statusToBGValue, taskStatusValue } from "~/utils/views";
+import { RichTextEditor } from "~/components/RichTextEditor";
 
 export interface TaskFormProps {
   handleSubmit: () => void;
@@ -62,10 +63,7 @@ export const TaskForm = component$<TaskFormProps>((props) => {
     <form preventdefault:submit onSubmit$={handleSubmit} class="space-y-4">
       <h3 class="font-bold text-lg mb-4">{title}</h3>
       <div class="form-control">
-        <GardensSelector
-          selectedId={gardenSignal.value}
-          onSelectionChange={onSelectionChange}
-        />
+        <GardensSelector selectedId={gardenSignal.value} onSelectionChange={onSelectionChange} />
       </div>
       <div class="form-control">
         <label class="label" for="status">
@@ -75,13 +73,11 @@ export const TaskForm = component$<TaskFormProps>((props) => {
           id="status"
           class="select select-bordered w-full"
           value={statusSignal.value}
-          onChange$={(e) =>
-            (statusSignal.value = (e.target as HTMLSelectElement).value)
-          }
+          onChange$={(e) => (statusSignal.value = (e.target as HTMLSelectElement).value)}
         >
           {taskStatusValue.map((config) => (
             <option key={config} value={config}>
-              {config}
+              {statusToBGValue(config)}
             </option>
           ))}
         </select>
@@ -94,31 +90,17 @@ export const TaskForm = component$<TaskFormProps>((props) => {
           type="datetime-local"
           id="date"
           class="input w-full"
-          value={(dateSignal.value.length
-            ? new Date(dateSignal.value)
-            : new Date()
-          )
+          value={(dateSignal.value.length ? new Date(dateSignal.value) : new Date())
             .toISOString()
             .slice(0, 16)}
-          onInput$={(e) =>
-            (dateSignal.value = (e.target as HTMLInputElement).value)
-          }
+          onInput$={(e) => (dateSignal.value = (e.target as HTMLInputElement).value)}
         />
       </div>
       <div class="form-control">
         <label class="label" for="info">
           <span class="label-text">Информация</span>
         </label>
-        <textarea
-          id="info"
-          class="textarea textarea-bordered h-24 w-full"
-          value={infoSignal.value}
-          onInput$={(e) =>
-            (infoSignal.value = (e.target as HTMLTextAreaElement).value)
-          }
-          placeholder="Детайли на задачата..."
-          required
-        ></textarea>
+        <RichTextEditor content={infoSignal} placeholder="Детайли на задачата..." height="h-64" />
       </div>
 
       {/* Image Upload Section */}
@@ -188,9 +170,7 @@ export const TaskForm = component$<TaskFormProps>((props) => {
           </button>
           <div class="indicator">
             {!!totalReports && (
-              <span class="indicator-item badge badge-secondary">
-                {totalReports}
-              </span>
+              <span class="indicator-item badge badge-secondary">{totalReports}</span>
             )}
             <a href={`/reports/create/${id}`} class="btn btn-accent">
               Рапорт

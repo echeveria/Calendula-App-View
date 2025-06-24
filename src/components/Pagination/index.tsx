@@ -1,4 +1,4 @@
-import { component$, $ } from "@builder.io/qwik";
+import { component$ } from "@builder.io/qwik";
 
 export interface PaginationProps {
   currentPage: number;
@@ -12,11 +12,7 @@ export const Pagination = component$<PaginationProps>(
   ({ currentPage, totalPages, onPrevPage, onNextPage, onGoToPage }) => {
     return (
       <div class="flex justify-center mt-4 space-x-2">
-        <button
-          class="btn btn-sm"
-          onClick$={onPrevPage}
-          disabled={currentPage <= 1}
-        >
+        <button class="btn btn-sm" onClick$={onPrevPage} disabled={currentPage <= 1}>
           Предишна
         </button>
 
@@ -29,10 +25,7 @@ export const Pagination = component$<PaginationProps>(
               pageToShow = i + 1;
             } else {
               // Calculate which pages to show
-              const startPage = Math.max(
-                1,
-                Math.min(currentPage - 2, totalPages - 4)
-              );
+              const startPage = Math.max(1, Math.min(currentPage - 2, totalPages - 4));
               pageToShow = startPage + i;
             }
 
@@ -48,11 +41,7 @@ export const Pagination = component$<PaginationProps>(
           })}
         </div>
 
-        <button
-          class="btn btn-sm"
-          onClick$={onNextPage}
-          disabled={currentPage >= totalPages}
-        >
+        <button class="btn btn-sm" onClick$={onNextPage} disabled={currentPage >= totalPages}>
           Следваща
         </button>
 

@@ -1,7 +1,7 @@
 import { $, NoSerialize, noSerialize, Signal } from "@builder.io/qwik";
 
 export type taskStatus = "pending" | "in_progress" | "completed" | "canceled";
-export const taskStatusValue = ["pending", "in_progress", "completed", "canceled"];
+export const taskStatusValue: taskStatus[] = ["pending", "in_progress", "completed", "canceled"];
 
 export const statusToColor = (status: taskStatus): string => {
   switch (status) {
@@ -25,6 +25,21 @@ export const statusToClass = (status: taskStatus): string => {
       return "badge-error";
     default:
       return "badge-success";
+  }
+};
+
+export const statusToBGValue = (status: taskStatus): string => {
+  switch (status) {
+    case "pending":
+      return "Бъдещ";
+    case "in_progress":
+      return "Текущ";
+    case "canceled":
+      return "Прекратен";
+    case "completed":
+      return "Завършен";
+    default:
+      return "";
   }
 };
 
