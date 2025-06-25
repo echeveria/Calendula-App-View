@@ -51,11 +51,6 @@ export const Navigation = component$(() => {
               tabIndex={0}
               class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
             >
-              <li>
-                <a href="/" class={location.url.pathname === "/" ? "menu-active" : ""}>
-                  Начало
-                </a>
-              </li>
               {!isLoggedIn.value ? (
                 <>
                   <li>
@@ -79,19 +74,19 @@ export const Navigation = component$(() => {
                 <>
                   <li>
                     <a
-                      href="/gardens"
-                      class={location.url.pathname === "/gardens/" ? "menu-active" : ""}
-                    >
-                      Обекти
-                    </a>
-                  </li>
-                  <li>
-                    <a
                       href="/calendar"
                       class={location.url.pathname === "/calendar/" ? "menu-active" : ""}
                     >
                       Календар
                     </a>
+                    <li>
+                      <a
+                        href="/gardens"
+                        class={location.url.pathname === "/gardens/" ? "menu-active" : ""}
+                      >
+                        Обекти
+                      </a>
+                    </li>
                   </li>
                   <li>
                     <a
@@ -126,11 +121,6 @@ export const Navigation = component$(() => {
       </div>
       <div class="navbar-center hidden lg:flex">
         <ul class="menu menu-horizontal px-1">
-          <li>
-            <a href="/" class={location.url.pathname === "/" ? "menu-active" : ""}>
-              Начало
-            </a>
-          </li>
           {!isLoggedIn.value ? (
             <>
               <li>
@@ -151,24 +141,24 @@ export const Navigation = component$(() => {
             <>
               <li>
                 <a
-                  href="/gardens"
-                  class={location.url.pathname === "/gardens/" ? "menu-active" : ""}
-                >
-                  Обекти
-                </a>
-              </li>
-              <li>
-                <a
                   href="/calendar"
-                  class={location.url.pathname === "/calendar/" ? "menu-active" : ""}
+                  className={location.url.pathname === "/calendar/" ? "menu-active" : ""}
                 >
                   Календар
                 </a>
               </li>
               <li>
                 <a
+                  href="/gardens"
+                  className={location.url.pathname === "/gardens/" ? "menu-active" : ""}
+                >
+                  Обекти
+                </a>
+              </li>
+              <li>
+                <a
                   href="/tasks"
-                  class={location.url.pathname.startsWith("/tasks/") ? "menu-active" : ""}
+                  className={location.url.pathname.startsWith("/tasks/") ? "menu-active" : ""}
                 >
                   Задачи
                 </a>
@@ -176,7 +166,7 @@ export const Navigation = component$(() => {
               <li>
                 <a
                   href="/reports"
-                  class={location.url.pathname.startsWith("/reports/") ? "menu-active" : ""}
+                  className={location.url.pathname.startsWith("/reports/") ? "menu-active" : ""}
                 >
                   Рапорти
                 </a>
