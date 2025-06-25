@@ -12,7 +12,9 @@ export default component$(() => {
         <div class="hero-overlay bg-opacity-60"></div>
         <div class="hero-content text-center text-neutral-content">
           <div class="max-w-md">
-            <h1 class="mb-5 text-5xl font-bold">Calendula</h1>
+            <h1 class="mb-5 text-5xl font-bold">
+              Calendula App <br /> & <br /> Miron Style Garden
+            </h1>
             <p class="mb-5">
               Професионално озеленяване и поддръжка на частни имоти и паркове. Мониторинг на
               дейностите и управление на задачите.
@@ -215,7 +217,7 @@ export default component$(() => {
 
       {/* Footer */}
       <footer
-        class="footer footer-center md:footer p-10 bg-neutral text-neutral-content flex flex-col md:flex-row md:justify-between"
+        class="footer md:footer p-10 bg-neutral text-neutral-content flex flex-col md:flex-row md:justify-between"
         id="contact"
       >
         {/*<div class="md:text-left">*/}
@@ -232,13 +234,19 @@ export default component$(() => {
         {/*  <a class="link link-hover">Кариери</a>*/}
         {/*  <a class="link link-hover">Блог</a>*/}
         {/*</div>*/}
-        {/*<div class="md:text-left mt-8 md:mt-0">*/}
-        {/*  <span class="footer-title">Контакти</span>*/}
-        {/*  /!*<p>ул. "Зелена градина" 123</p>*!/*/}
-        {/*  /!*<p>гр. София, 1000</p>*!/*/}
-        {/*  /!*<p>Тел: +359 88 888 8888</p>*!/*/}
-        {/*  /!*<p>Email: info@dvorcheck.bg</p>*!/*/}
-        {/*</div>*/}
+        <span class="footer-title -mb-10">Контакти</span>
+        <div class="md:text-left mt-8 md:mt-0">
+          <span class="footer-title">Calendula App</span>
+          <p>гр. Пловдив, 4000</p>
+          <p>Тел. +359877202617</p>
+          <p>Email: s.p.germanov@gmail.com</p>
+        </div>
+        <div class="md:text-left mt-8 md:mt-0">
+          <span class="footer-title">Miron Style Garden</span>
+          <p>гр. Пловдив, 4000</p>
+          <p>Тел. +359895606248</p>
+          <p>Email: pindevmiroslav@gmail.com</p>
+        </div>
       </footer>
       <footer class="footer flex flex-col sm:flex-row items-center justify-between px-10 py-4 border-t bg-neutral text-neutral-content border-base-300">
         <div class="text-center sm:text-left mb-4 sm:mb-0">

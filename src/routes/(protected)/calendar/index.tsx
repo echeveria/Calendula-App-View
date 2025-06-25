@@ -148,7 +148,7 @@ export default component$(() => {
   });
 
   return (
-    <div class="min-h-screen p-4 bg-base-200 rounded-box">
+    <div class="h-full p-4 bg-base-200 rounded-box">
       <CalendarStatusFilter
         currentStatusFilter={statusFilter}
         handleStatusFilterChange={onFilterChange}
