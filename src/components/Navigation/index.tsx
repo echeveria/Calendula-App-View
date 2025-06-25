@@ -142,7 +142,7 @@ export const Navigation = component$(() => {
               <li>
                 <a
                   href="/calendar"
-                  className={location.url.pathname === "/calendar/" ? "menu-active" : ""}
+                  class={location.url.pathname === "/calendar/" ? "menu-active" : ""}
                 >
                   Календар
                 </a>
@@ -150,7 +150,7 @@ export const Navigation = component$(() => {
               <li>
                 <a
                   href="/gardens"
-                  className={location.url.pathname === "/gardens/" ? "menu-active" : ""}
+                  class={location.url.pathname === "/gardens/" ? "menu-active" : ""}
                 >
                   Обекти
                 </a>
@@ -158,7 +158,7 @@ export const Navigation = component$(() => {
               <li>
                 <a
                   href="/tasks"
-                  className={location.url.pathname.startsWith("/tasks/") ? "menu-active" : ""}
+                  class={location.url.pathname.startsWith("/tasks/") ? "menu-active" : ""}
                 >
                   Задачи
                 </a>
@@ -166,7 +166,7 @@ export const Navigation = component$(() => {
               <li>
                 <a
                   href="/reports"
-                  className={location.url.pathname.startsWith("/reports/") ? "menu-active" : ""}
+                  class={location.url.pathname.startsWith("/reports/") ? "menu-active" : ""}
                 >
                   Рапорти
                 </a>
