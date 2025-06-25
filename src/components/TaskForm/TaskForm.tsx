@@ -1,6 +1,6 @@
 import { $, component$, Signal, useSignal } from "@builder.io/qwik";
 import { GardensSelector } from "~/components/GardensSelector";
-import { statusToBGValue, taskStatusValue } from "~/utils/views";
+import { taskStatusValue } from "~/utils/views";
 import { RichTextEditor } from "~/components/RichTextEditor";
 
 export interface TaskFormProps {
@@ -77,7 +77,7 @@ export const TaskForm = component$<TaskFormProps>((props) => {
         >
           {taskStatusValue.map((config) => (
             <option key={config} value={config}>
-              {statusToBGValue(config)}
+              {config}
             </option>
           ))}
         </select>

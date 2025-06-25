@@ -3,6 +3,7 @@ import { useNavigate, useLocation, type DocumentHead } from "@builder.io/qwik-ci
 import { pb, getAuthToken } from "~/utils/pocketbase";
 import { handleImageDelete, handleImageUpload } from "~/utils/views";
 import { RichTextEditor } from "~/components/RichTextEditor";
+import { ImageCarousel } from "~/components/ImageCarousel";
 
 export default component$(() => {
   const navigate = useNavigate();
@@ -224,37 +225,11 @@ export default component$(() => {
                     <label class="label">
                       <span class="label-text">Преглед</span>
                     </label>
-                    <div class="grid grid-cols-3 gap-2">
-                      {imagesPreviewSignal.value.map((preview, index) => (
-                        <div key={index} class="relative">
-                          <img
-                            src={preview}
-                            alt={`Preview ${index}`}
-                            class="w-full h-24 object-cover rounded-lg"
-                          />
-                          <button
-                            type="button"
-                            class="btn btn-circle btn-error btn-sm absolute top-2 right-2"
-                            onClick$={() => handleImageDelete(index, imagesSignal, imagesPreviewSignal)}
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              class="h-4 w-4"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12"
-                              />
-                            </svg>
-                          </button>
-                        </div>
-                      ))}
-                    </div>
+                    <ImageCarousel
+                      images={imagesPreviewSignal.value}
+                      onDelete={(index) => handleImageDelete(index, imagesSignal, imagesPreviewSignal)}
+                      showDeleteButton={true}
+                    />
                   </div>
                 )}
 

@@ -1,10 +1,10 @@
-import { component$, useSignal, $, useVisibleTask$ } from "@builder.io/qwik";
+import { component$, useSignal, $, useVisibleTask$, useTask$ } from "@builder.io/qwik";
 import { pb, getAuthToken } from "~/utils/pocketbase";
 import { Pagination } from "~/components/Pagination";
 
 export interface GardensListProps {
   onGardenSelected?: (gardenId: string) => void;
-  onRefresh?: (gardens?: any[]) => void;
+  onRefresh?: (gardens?: any[], search?: string | undefined) => void;
   showActions?: boolean;
   showCreateButton?: boolean;
 }
@@ -22,10 +22,12 @@ export const GardensList = component$<GardensListProps>(
     const successSignal = useSignal("");
     const currentPage = useSignal(1);
     const totalPages = useSignal(1);
+    const input = useSignal("");
+    const debouncedInput = useSignal("");
     const itemsPerPage = 10;
 
     // Function to load gardens from PocketBase
-    const loadGardens = $(async () => {
+    const loadGardens = $(async (search?: string) => {
       isLoading.value = true;
       errorSignal.value = "";
 
@@ -34,8 +36,17 @@ export const GardensList = component$<GardensListProps>(
         pb.authStore.save(getAuthToken() || "", null);
 
         try {
+          const searchStr =
+            search && search.length > 0
+              ? {
+                  filter: `title ~ "${search}" || description ~ "${search}" || _owner.name ~ "${search}" || _owner.email ~ "${search}" || _managers.name ~ "${search}" || _managers.email ~ "${search}" || _gardeners.name ~ "${search}"`,
+                }
+              : undefined;
+
           const response = await pb.collection("gardens").getList(currentPage.value, itemsPerPage, {
             sort: "title",
+            expand: "_owner, _managers, _gardeners",
+            ...searchStr,
           });
 
           function deduplicateById<T extends { id: string }>(items: T[]): T[] {
@@ -49,7 +60,7 @@ export const GardensList = component$<GardensListProps>(
 
           // Calculate total pages
           totalPages.value = Math.ceil(response.totalItems / itemsPerPage);
-          onRefresh(gardens.value);
+          onRefresh(gardens.value, search);
         } catch (err: any) {
           errorSignal.value = err.message || "Failed to load gardens";
           console.error("Error loading gardens:", err);
@@ -90,12 +101,43 @@ export const GardensList = component$<GardensListProps>(
       await loadGardens();
     });
 
+    useTask$(({ track, cleanup }) => {
+      track(() => input.value);
+
+      const timeout = setTimeout(() => {
+        debouncedInput.value = input.value;
+        loadGardens(debouncedInput.value);
+      }, 1000); // 500ms delay after stop typing
+
+      cleanup(() => clearTimeout(timeout));
+    });
 
     return (
       <div class="card bg-base-100 shadow-xl mb-6">
         <div class="card-body">
-          <h2 class="card-title">Обекти</h2>
-
+          <label class="input mb-4">
+            <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <g
+                stroke-linejoin="round"
+                stroke-linecap="round"
+                stroke-width="2.5"
+                fill="none"
+                stroke="currentColor"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.3-4.3"></path>
+              </g>
+            </svg>
+            <input
+              type="search"
+              class="grow"
+              placeholder="Search"
+              value={input.value}
+              onInput$={(e) => (input.value = (e.target as HTMLInputElement).value)}
+            />
+            {/*<kbd class="kbd kbd-sm">⌘</kbd>*/}
+            {/*<kbd class="kbd kbd-sm">K</kbd>*/}
+          </label>
           {errorSignal.value && (
             <div class="alert alert-error mb-4">
               <svg
@@ -140,7 +182,7 @@ export const GardensList = component$<GardensListProps>(
             </div>
           ) : gardens.value.length === 0 ? (
             <div class="text-center p-4">
-              <p>Няма добавени Обекти. Създайте първата!</p>
+              <p>Няма открити Обекти</p>
             </div>
           ) : (
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -149,7 +191,7 @@ export const GardensList = component$<GardensListProps>(
                   {garden.photos && garden.photos.length > 0 && (
                     <figure>
                       <img
-                        src={pb.files.getURL(garden, garden.photos[0])}
+                        src={pb.files.getURL(garden, garden.photos[0], { thumb: "0x450" })}
                         alt={garden.title}
                         class="w-full h-48 object-cover"
                       />

@@ -8,6 +8,7 @@ import { Calendar } from "@fullcalendar/core";
 import { statusToColor } from "~/utils/views";
 import bgLocale from "@fullcalendar/core/locales/bg";
 import { TaskModal } from "~/components/TaskModal";
+import { ImageCarousel } from "~/components/ImageCarousel";
 
 export default component$(() => {
   const location = useLocation();
@@ -164,35 +165,17 @@ export default component$(() => {
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Garden Images */}
             <div class="lg:col-span-1">
-              <div class="card bg-base-100 shadow-xl">
+              <div class="card p-4 bg-base-100 shadow-xl">
                 {gardenSignal.value.photos && gardenSignal.value.photos.length > 0 ? (
-                  <figure>
-                    <img
-                      src={`${pb.baseURL}/api/files/${gardenSignal.value.collectionId}/${gardenSignal.value.id}/${gardenSignal.value.photos[0]}`}
-                      alt={gardenSignal.value.title}
-                      class="w-full object-cover"
-                    />
-                  </figure>
+                  <ImageCarousel
+                    images={gardenSignal.value.photos.map(
+                      (photo: string) =>
+                        `${pb.baseURL}/api/files/${gardenSignal.value.collectionId}/${gardenSignal.value.id}/${photo}`
+                    )}
+                  />
                 ) : (
                   <div class="h-48 w-full bg-gray-200 flex items-center justify-center">
                     <span class="text-gray-400">Няма снимка</span>
-                  </div>
-                )}
-
-                {/* Additional photos gallery */}
-                {gardenSignal.value.photos && gardenSignal.value.photos.length > 1 && (
-                  <div class="p-4">
-                    <h3 class="font-bold text-lg mb-2">Gallery</h3>
-                    <div class="grid grid-cols-3 gap-2">
-                      {gardenSignal.value.photos.slice(1).map((photo: string) => (
-                        <img
-                          key={photo}
-                          src={`${pb.baseURL}/api/files/${gardenSignal.value.collectionId}/${gardenSignal.value.id}/${photo}`}
-                          alt={gardenSignal.value.title}
-                          class="w-full h-24 object-cover rounded"
-                        />
-                      ))}
-                    </div>
                   </div>
                 )}
               </div>
