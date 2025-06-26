@@ -267,7 +267,7 @@ export const ReportsList = component$<ReportsListProps>(
                 <thead>
                   <tr>
                     <th>Заглавие</th>
-                    <th>Задача:Дата</th>
+                    <th>Задача</th>
                     <th>Създаден на</th>
                     {showActions && <th>Действия</th>}
                   </tr>
@@ -284,8 +284,6 @@ export const ReportsList = component$<ReportsListProps>(
                         {Object.keys(report.expand).length > 0 && (
                           <a class="link" href={`/tasks/edit/${report.expand._task.id}`}>
                             {report.expand._task.expand._garden.title}
-                            {":  "}
-                            {new Date(report.expand._task.due_date).toLocaleDateString()}
                           </a>
                         )}
                       </td>

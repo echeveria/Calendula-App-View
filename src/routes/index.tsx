@@ -197,7 +197,7 @@ export default component$(() => {
       {/*</section>*/}
 
       {/* CTA Section */}
-      <section class="py-16 bg-primary text-primary-content">
+      <section class="py-16 bg-secondary text-primary-content">
         <div class="container mx-auto px-4 text-center">
           <h2 class="text-3xl font-bold mb-6">Готови ли сте да трансформирате вашата градина?</h2>
           <p class="mb-8 max-w-2xl mx-auto">
@@ -205,10 +205,10 @@ export default component$(() => {
             поддръжката на вашия имот.
           </p>
           <div class="flex flex-col sm:flex-row justify-center gap-4">
-            <a href="/register" class="btn btn-secondary">
+            <a href="/register" class="btn btn-success">
               Регистрирайте се
             </a>
-            <a href="#contact" class="btn btn-outline btn-secondary">
+            <a href="#contact" class="btn btn-outline">
               Свържете се с нас
             </a>
           </div>

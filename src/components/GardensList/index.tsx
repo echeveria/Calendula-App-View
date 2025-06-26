@@ -131,7 +131,7 @@ export const GardensList = component$<GardensListProps>(
             <input
               type="search"
               class="grow"
-              placeholder="Search"
+              placeholder="Търси"
               value={input.value}
               onInput$={(e) => (input.value = (e.target as HTMLInputElement).value)}
             />
