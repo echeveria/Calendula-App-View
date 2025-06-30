@@ -34,3 +34,12 @@
     display: none !important;
   }
 }
+@media (max-width: 768px) {
+  .modal-box {
+    max-height: 100dvh;
+    border-radius: 1rem 1rem 0 0;
+    bottom: 0;
+    position: fixed;
+  }
+}
+

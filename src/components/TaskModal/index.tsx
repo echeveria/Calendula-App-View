@@ -152,7 +152,7 @@ export const TaskModal = component$<TaskModalProps>((props) => {
   });
 
   return (
-    <div class={`modal z-10000 h-[100dvh] ${isOpen ? "modal-open" : ""}`}>
+    <div class={`modal z-10000  ${isOpen ? "modal-open" : ""}`}>
       <div class="modal-box">
         <button class="absolute top-2 right-2  btn btn-circle" onClick$={() => onClose()}>
           <svg
