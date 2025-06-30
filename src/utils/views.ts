@@ -76,3 +76,11 @@ export const handleImageDelete = $(
     imagesSignal.value = noSerialize(files);
   }
 );
+
+export function deduplicateById<T extends { id: string }>(items: T[]): T[] {
+  const map: Record<string, T> = {};
+  for (const item of items) {
+    map[item.id] = item;
+  }
+  return Object.values(map);
+}

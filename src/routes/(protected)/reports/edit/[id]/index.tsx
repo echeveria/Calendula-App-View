@@ -1,7 +1,15 @@
-import { component$, useSignal, $, useVisibleTask$ } from "@builder.io/qwik";
+import {
+  component$,
+  useSignal,
+  $,
+  useVisibleTask$,
+  NoSerialize,
+  noSerialize,
+} from "@builder.io/qwik";
 import { useNavigate, useLocation, type DocumentHead } from "@builder.io/qwik-city";
 import { pb, getAuthToken } from "~/utils/pocketbase";
 import { ReportForm } from "~/components/ReportForm";
+import { handleImageDelete, handleImageUpload } from "~/utils/views";
 
 export default component$(() => {
   const navigate = useNavigate();
@@ -14,6 +22,9 @@ export default component$(() => {
   const errorSignal = useSignal("");
   const isLoading = useSignal(false);
   const isLoadingReport = useSignal(true);
+
+  const imagesPreviewSignal = useSignal<NoSerialize<string[]>>(undefined);
+  const imagesSignal = useSignal<NoSerialize<File[]>>(undefined);
 
   // Function to load report data from PocketBase
   const loadReport = $(async () => {
@@ -31,6 +42,13 @@ export default component$(() => {
         titleSignal.value = data.title || "";
         contentSignal.value = data.content || "";
         markedAsReadSignal.value = data.marked_as_read || false;
+
+        // Load images if available
+        if (data.images && data.images.length > 0) {
+          // For existing images, we only need the URLs for preview
+          const imageUrls = data.images.map((image: any) => pb.files.getURL(data, image));
+          imagesPreviewSignal.value = noSerialize(imageUrls);
+        }
       } catch (err: any) {
         errorSignal.value = err.message || "Failed to load report";
         console.error("Error loading report:", err);
@@ -72,6 +90,7 @@ export default component$(() => {
         title: titleSignal.value,
         content: contentSignal.value,
         marked_as_read: markedAsReadSignal.value,
+        images: imagesSignal.value,
       };
 
       // Set the auth token for the request
@@ -165,6 +184,13 @@ export default component$(() => {
                 btnTitle="Запази"
                 id={reportId}
                 handleDelete={handleDelete}
+                handleImageUpload={$((files: File[]) =>
+                  handleImageUpload(files, imagesSignal, imagesPreviewSignal)
+                )}
+                images={imagesPreviewSignal.value}
+                handleImageDelete={$((index: number) =>
+                  handleImageDelete(index, imagesSignal, imagesPreviewSignal)
+                )}
               />
               <div class="text-center mt-4">
                 <a href="/reports" class="link link-primary">

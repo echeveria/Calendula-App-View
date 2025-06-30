@@ -2,6 +2,7 @@ import { component$, useSignal, $, useVisibleTask$, NoSerialize } from "@builder
 import { TaskForm } from "~/components/TaskForm/TaskForm";
 import { pb, getAuthToken, getUserInfo } from "~/utils/pocketbase";
 import { handleImageDelete, handleImageUpload } from "~/utils/views";
+import { ReportsInTask } from "~/components/ReportsInTask/ReportsInTask";
 
 export interface TaskModalProps {
   isOpen: boolean;
@@ -151,8 +152,26 @@ export const TaskModal = component$<TaskModalProps>((props) => {
   });
 
   return (
-    <div class={`modal z-10000 ${isOpen ? "modal-open" : ""}`}>
+    <div class={`modal z-10000 h-[100dvh] ${isOpen ? "modal-open" : ""}`}>
       <div class="modal-box">
+        <button class="absolute top-2 right-2  btn btn-circle" onClick$={() => onClose()}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-circle-x-icon lucide-circle-x"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <path d="m15 9-6 6" />
+            <path d="m9 9 6 6" />
+          </svg>
+        </button>
         {errorSignal.value && (
           <div class="alert alert-error mt-4 mb-4">
             <svg
@@ -171,17 +190,6 @@ export const TaskModal = component$<TaskModalProps>((props) => {
             <span>{errorSignal.value}</span>
           </div>
         )}
-        <div class="modal-title flex justify-end">
-          {!readSignal.value ||
-            (totalReportsSignal.value && (
-              <a
-                href={`/reports/?taskId=${id}`}
-                class={`badge badge-sm ${readSignal.value > 0 ? "badge-warning" : undefined}`}
-              >
-                {readSignal.value} от {totalReportsSignal.value || 0} непрочетени
-              </a>
-            ))}
-        </div>
         <TaskForm
           handleSubmit={handleSubmit}
           handleDelete={deleteTask}
@@ -202,11 +210,7 @@ export const TaskModal = component$<TaskModalProps>((props) => {
             handleImageDelete(index, imagesSignal, imagesPreviewSignal)
           )}
         />
-        <div class="modal-action">
-          <button class="btn" onClick$={() => onClose()}>
-            Cancel
-          </button>
-        </div>
+        {id && <ReportsInTask taskId={id} />}
       </div>
       <div class="modal-backdrop" onClick$={() => onClose()}></div>
     </div>

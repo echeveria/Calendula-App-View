@@ -1,7 +1,8 @@
-import { component$, useSignal, $ } from "@builder.io/qwik";
+import { component$, useSignal, $, NoSerialize } from "@builder.io/qwik";
 import { useNavigate, type DocumentHead, useLocation } from "@builder.io/qwik-city";
-import { pb, getAuthToken } from "~/utils/pocketbase";
+import { pb, getAuthToken, getUserInfo } from "~/utils/pocketbase";
 import { ReportForm } from "~/components/ReportForm";
+import { handleImageDelete, handleImageUpload } from "~/utils/views";
 
 export default component$(() => {
   const navigate = useNavigate();
@@ -14,9 +15,13 @@ export default component$(() => {
   const errorSignal = useSignal("");
   const isLoading = useSignal(false);
 
+  const imagesPreviewSignal = useSignal<NoSerialize<string[]>>(undefined);
+  const imagesSignal = useSignal<NoSerialize<File[]>>(undefined);
+
   const handleSubmit = $(async () => {
     errorSignal.value = "";
     isLoading.value = true;
+    const currentUser = getUserInfo();
 
     try {
       // Validate form
@@ -45,6 +50,8 @@ export default component$(() => {
         content: contentSignal.value,
         marked_as_read: markedAsReadSignal.value,
         _task: taskId,
+        _user: currentUser.id,
+        images: imagesSignal.value,
       };
 
       // Set the auth token for the request
@@ -100,6 +107,13 @@ export default component$(() => {
               isLoading={isLoading}
               title="Нов Репорт"
               btnTitle="Запази"
+              handleImageUpload={$((files: File[]) =>
+                handleImageUpload(files, imagesSignal, imagesPreviewSignal)
+              )}
+              images={imagesPreviewSignal.value}
+              handleImageDelete={$((index: number) =>
+                handleImageDelete(index, imagesSignal, imagesPreviewSignal)
+              )}
             />
             <div class="text-center mt-4">
               <a href="/reports" class="link link-primary">
