@@ -197,7 +197,7 @@ export const TaskForm = component$<TaskFormProps>((props) => {
       {/* Image Preview Modal */}
       {isImageModalOpen.value && (
         <div
-          class="sticky inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80"
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80"
           onClick$={closeImageModal}
         >
           <div class="relative max-w-4xl max-h-screen p-4" onClick$={(e) => e.stopPropagation()}>
