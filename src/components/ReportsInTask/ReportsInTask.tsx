@@ -56,6 +56,7 @@ export const ReportsInTask = component$<ReportsInTaskProps>((props) => {
   useVisibleTask$(async () => {
     await loadReports();
   });
+
   return (
     <div class="my-4">
       {errorSignal.value && (
@@ -96,14 +97,24 @@ export const ReportsInTask = component$<ReportsInTaskProps>((props) => {
         </div>
       )}
       <div>
-        {reports.value.length > 0 &&
-          reports.value.map((report, index) => (
-            <div
-              tabIndex={index}
-              class="collapse collapse-arrow bg-base-100 border-base-300 border my-4"
-            >
-              <div class="flex justify-between items-center collapse-title font-semibold">
-                <a href={`/reports/edit/${report.id}`} class="inline-flex link">
+        <ul class="list bg-base-100 rounded-box shadow-md">
+          <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">Репорти</li>
+          {reports.value.length > 0 ? (
+            reports.value.map((report, index) => (
+              <li class="list-row" tabIndex={index} key={index}>
+                <div>
+                  <div class="flex justify-between items-center mb-4">
+                    <div class="text-xs uppercase font-semibold opacity-60">{report.title}</div>
+                    {report.expand._user && (
+                      <span class="badge badge-sm badge-info">{report.expand._user.name}</span>
+                    )}
+                  </div>
+                  <div dangerouslySetInnerHTML={DOMPurify.sanitize(report.content)} />
+                  <a href={`/reports/edit/${report.id}`} class="mt-2 badge badge-sm badge-warning">
+                    {report.images.length > 0 ? `Снимки ${report.images.length}` : `Няма снимки.`}
+                  </a>
+                </div>
+                <a href={`/reports/edit/${report.id}`} class="btn btn-square btn-ghost">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -119,19 +130,13 @@ export const ReportsInTask = component$<ReportsInTaskProps>((props) => {
                     <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                     <path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" />
                   </svg>
-                  <span class="ml-1">{report.title}</span>
                 </a>
-
-                {report.expand._user && (
-                  <span class="badge badge-sm badge-info">{report.expand._user.name}</span>
-                )}
-              </div>
-              <div
-                class="collapse-content text-sm"
-                dangerouslySetInnerHTML={DOMPurify.sanitize(report.content)}
-              />
-            </div>
-          ))}
+              </li>
+            ))
+          ) : (
+            <li class="list-row">Няма добавени репорти</li>
+          )}
+        </ul>
       </div>
     </div>
   );

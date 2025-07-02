@@ -27,7 +27,7 @@ export const TaskModal = component$<TaskModalProps>((props) => {
   const imagesSignal = useSignal<NoSerialize<File[]>>(undefined);
 
   // Check if user is logged in and load task data if editing
-  useVisibleTask$(async ({ track }) => {
+  useVisibleTask$(async ({ track, cleanup }) => {
     track(() => id);
     track(() => date);
 
@@ -71,6 +71,20 @@ export const TaskModal = component$<TaskModalProps>((props) => {
       statusSignal.value = "not_started";
       gardenSignal.value = "";
     }
+
+    cleanup(() => {
+      statusSignal.value = "pending";
+      infoSignal.value = "";
+      gardenSignal.value = null;
+      nameSignal.value = "";
+      dateSignal.value = "";
+      errorSignal.value = "";
+      isLoading.value = false;
+      totalReportsSignal.value = undefined;
+      readSignal.value = 0;
+      imagesPreviewSignal.value = undefined;
+      imagesSignal.value = undefined;
+    });
   });
 
   const handleSubmit = $(async () => {
@@ -190,26 +204,28 @@ export const TaskModal = component$<TaskModalProps>((props) => {
             <span>{errorSignal.value}</span>
           </div>
         )}
-        <TaskForm
-          handleSubmit={handleSubmit}
-          handleDelete={deleteTask}
-          gardenSignal={gardenSignal}
-          statusSignal={statusSignal}
-          dateSignal={dateSignal}
-          isLoading={isLoading}
-          infoSignal={infoSignal}
-          btnTitle={"Запази"}
-          title={nameSignal.value || "Нова Задача"}
-          id={id}
-          totalReports={readSignal.value}
-          handleImageUpload={$((files: File[]) =>
-            handleImageUpload(files, imagesSignal, imagesPreviewSignal)
-          )}
-          images={imagesPreviewSignal.value}
-          handleImageDelete={$((index: number) =>
-            handleImageDelete(index, imagesSignal, imagesPreviewSignal)
-          )}
-        />
+        {isOpen && (
+          <TaskForm
+            handleSubmit={handleSubmit}
+            handleDelete={deleteTask}
+            gardenSignal={gardenSignal}
+            statusSignal={statusSignal}
+            dateSignal={dateSignal}
+            isLoading={isLoading}
+            infoSignal={infoSignal}
+            btnTitle={"Запази"}
+            title={nameSignal.value || "Нова Задача"}
+            id={id}
+            totalReports={readSignal.value}
+            handleImageUpload={$((files: File[]) =>
+              handleImageUpload(files, imagesSignal, imagesPreviewSignal)
+            )}
+            images={imagesPreviewSignal.value}
+            handleImageDelete={$((index: number) =>
+              handleImageDelete(index, imagesSignal, imagesPreviewSignal)
+            )}
+          />
+        )}
         {id && <ReportsInTask taskId={id} />}
       </div>
       <div class="modal-backdrop" onClick$={() => onClose()}></div>
