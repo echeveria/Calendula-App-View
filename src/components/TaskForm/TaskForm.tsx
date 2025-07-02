@@ -2,6 +2,7 @@ import { $, component$, Signal, useSignal } from "@builder.io/qwik";
 import { GardensSelector } from "~/components/GardensSelector";
 import { taskStatusValue } from "~/utils/views";
 import { RichTextEditor } from "~/components/RichTextEditor";
+import { ImageCompressor } from "~/utils/ImageCompressor";
 
 export interface TaskFormProps {
   handleSubmit: () => void;
@@ -44,12 +45,22 @@ export const TaskForm = component$<TaskFormProps>((props) => {
   const onSelectionChange = $((id: string) => (props.gardenSignal.value = id));
 
   // Handle image upload
-  const onImageUpload = $((e: Event) => {
+  const onImageUpload = $(async (e: Event) => {
     const input = e.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const newFiles = Array.from(input.files);
+      const compressedFiles = await Promise.all(newFiles.map((file) => ImageCompressor(file, 0.6)));
+
+      console.log(
+        "Original files:",
+        newFiles.map((f) => f.size)
+      );
+      console.log(
+        "Compressed files:",
+        compressedFiles.map((f) => f.size)
+      );
       if (handleImageUpload) {
-        handleImageUpload(newFiles);
+        handleImageUpload(compressedFiles);
       }
       deletable.value = true;
     }
