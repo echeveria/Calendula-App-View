@@ -25,6 +25,7 @@ export const TaskModal = component$<TaskModalProps>((props) => {
   const readSignal = useSignal<number>(0);
   const imagesPreviewSignal = useSignal<NoSerialize<string[]>>(undefined);
   const imagesSignal = useSignal<NoSerialize<File[]>>(undefined);
+  const refreshReportsSignal = useSignal(0);
 
   // Check if user is logged in and load task data if editing
   useVisibleTask$(async ({ track, cleanup }) => {
@@ -167,7 +168,7 @@ export const TaskModal = component$<TaskModalProps>((props) => {
 
   return (
     <div class={`modal z-10000  ${isOpen ? "modal-open" : ""}`}>
-      <div class="modal-box">
+      <div class="modal-box sm:rounded-none">
         <button class="absolute top-2 right-2  btn btn-circle" onClick$={() => onClose()}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -224,9 +225,10 @@ export const TaskModal = component$<TaskModalProps>((props) => {
             handleImageDelete={$((index: number) =>
               handleImageDelete(index, imagesSignal, imagesPreviewSignal)
             )}
+            refreshReportsSignal={refreshReportsSignal}
           />
         )}
-        {id && <ReportsInTask taskId={id} />}
+        {id && <ReportsInTask taskId={id} refreshTrigger={refreshReportsSignal} />}
       </div>
       <div class="modal-backdrop" onClick$={() => onClose()}></div>
     </div>

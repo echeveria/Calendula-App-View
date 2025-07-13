@@ -1,8 +1,14 @@
-import { $, component$, Signal, useSignal } from "@builder.io/qwik";
+import { $, component$, Signal, useSignal, NoSerialize } from "@builder.io/qwik";
 import { GardensSelector } from "~/components/GardensSelector";
-import { taskStatusValue } from "~/utils/views";
+import {
+  taskStatusValue,
+  handleImageDelete as utilsHandleImageDelete,
+  handleImageUpload as utilsHandleImageUpload,
+} from "~/utils/views";
 import { RichTextEditor } from "~/components/RichTextEditor";
 import { ImageCompressor } from "~/utils/ImageCompressor";
+import { ReportForm } from "~/components/ReportForm";
+import { pb, getAuthToken, getUserInfo } from "~/utils/pocketbase";
 
 export interface TaskFormProps {
   handleSubmit: () => void;
@@ -19,6 +25,7 @@ export interface TaskFormProps {
   btnTitle?: string;
   id?: string;
   totalReports?: number;
+  refreshReportsSignal?: Signal<number>;
 }
 
 export const TaskForm = component$<TaskFormProps>((props) => {
@@ -36,11 +43,22 @@ export const TaskForm = component$<TaskFormProps>((props) => {
     handleImageDelete,
     handleImageUpload,
     images,
+    refreshReportsSignal,
   } = props;
 
   const deletable = useSignal(false);
   const isImageModalOpen = useSignal(false);
   const selectedImageUrl = useSignal("");
+
+  // Report form state
+  const showReportForm = useSignal(false);
+  const reportTitleSignal = useSignal("");
+  const reportContentSignal = useSignal("");
+  const reportMarkedAsReadSignal = useSignal(false);
+  const reportIsLoading = useSignal(false);
+  const reportImagesPreviewSignal = useSignal<NoSerialize<string[]>>(undefined);
+  const reportImagesSignal = useSignal<NoSerialize<File[]>>(undefined);
+  const reportSuccessMessage = useSignal("");
 
   const onSelectionChange = $((id: string) => (props.gardenSignal.value = id));
 
@@ -82,10 +100,102 @@ export const TaskForm = component$<TaskFormProps>((props) => {
     isImageModalOpen.value = false;
   });
 
+  // Toggle report form visibility
+  const toggleReportForm = $(() => {
+    showReportForm.value = !showReportForm.value;
+    // Clear success message when toggling form
+    reportSuccessMessage.value = "";
+  });
+
+  // Handle report submission
+  const handleReportSubmit = $(async () => {
+    if (!id) {
+      console.error("Task ID is required to create a report");
+      return;
+    }
+
+    reportIsLoading.value = true;
+    reportSuccessMessage.value = ""; // Clear any previous success message
+    const currentUser = getUserInfo();
+
+    try {
+      // Validate form
+      if (!reportTitleSignal.value) {
+        console.error("Report title is required");
+        reportIsLoading.value = false;
+        return;
+      }
+
+      if (!reportContentSignal.value) {
+        console.error("Report content is required");
+        reportIsLoading.value = false;
+        return;
+      }
+
+      // Create report in PocketBase
+      const reportData = {
+        title: reportTitleSignal.value,
+        content: reportContentSignal.value,
+        marked_as_read: reportMarkedAsReadSignal.value,
+        _task: id,
+        _user: currentUser.id,
+        images: reportImagesSignal.value,
+      };
+
+      // Set the auth token for the request
+      pb.authStore.save(getAuthToken() || "", null);
+
+      await pb.collection("reports").create(reportData);
+
+      // Set success message
+      reportSuccessMessage.value = "Рапортът е създаден успешно!";
+
+      // Trigger refresh of ReportsInTask component
+      if (refreshReportsSignal) {
+        refreshReportsSignal.value = refreshReportsSignal.value + 1;
+      }
+
+      // Reset form and hide it
+      reportTitleSignal.value = "";
+      reportContentSignal.value = "";
+      reportMarkedAsReadSignal.value = false;
+      reportImagesPreviewSignal.value = undefined;
+      reportImagesSignal.value = undefined;
+      showReportForm.value = false;
+
+      console.log("Report created successfully");
+    } catch (error) {
+      console.error("Error creating report:", error);
+    } finally {
+      reportIsLoading.value = false;
+    }
+  });
+
   return (
     <>
       <form preventdefault:submit onSubmit$={handleSubmit} class="space-y-4">
         <h3 class="font-bold text-lg mb-4">{title}</h3>
+
+        {/* Success message for report creation */}
+        {reportSuccessMessage.value && (
+          <div class="alert alert-success mb-4">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="stroke-current shrink-0 h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span>{reportSuccessMessage.value}</span>
+          </div>
+        )}
+
         <div class="form-control">
           <GardensSelector selectedId={gardenSignal.value} onSelectionChange={onSelectionChange} />
         </div>
@@ -193,9 +303,9 @@ export const TaskForm = component$<TaskFormProps>((props) => {
             >
               {isLoading.value ? "Updating..." : btnTitle}
             </button>
-            <a href={`/reports/create/${id}`} class="btn btn-accent">
-              Създай Рапорт
-            </a>
+            <button type="button" class="btn btn-accent" onClick$={toggleReportForm}>
+              {showReportForm.value ? "Скрий Рапорт" : "Създай Рапорт"}
+            </button>
             {id && (
               <button class="btn btn-error" onClick$={handleDelete}>
                 Изтрий
@@ -204,6 +314,28 @@ export const TaskForm = component$<TaskFormProps>((props) => {
           </div>
         </div>
       </form>
+
+      {/* Report Form */}
+      {showReportForm.value && id && (
+        <div class="mt-6 p-4 border border-accent border-4 rounded">
+          <ReportForm
+            handleSubmit={handleReportSubmit}
+            titleSignal={reportTitleSignal}
+            contentSignal={reportContentSignal}
+            markedAsReadSignal={reportMarkedAsReadSignal}
+            isLoading={reportIsLoading}
+            title="Нов Рапорт"
+            btnTitle="Запази Рапорт"
+            handleImageUpload={$((files: File[]) =>
+              utilsHandleImageUpload(files, reportImagesSignal, reportImagesPreviewSignal)
+            )}
+            images={reportImagesPreviewSignal.value}
+            handleImageDelete={$((index: number) =>
+              utilsHandleImageDelete(index, reportImagesSignal, reportImagesPreviewSignal)
+            )}
+          />
+        </div>
+      )}
 
       {/* Image Preview Modal */}
       {isImageModalOpen.value && (
