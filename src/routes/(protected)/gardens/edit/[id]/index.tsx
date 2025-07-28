@@ -60,6 +60,10 @@ export default component$(() => {
     await loadGarden();
   });
 
+  const onDelete = $((index: number) => {
+    handleImageDelete(index, imagesSignal, imagesPreviewSignal);
+  });
+
   const handleSubmit = $(async () => {
     errorSignal.value = "";
     successSignal.value = "";
@@ -227,7 +231,7 @@ export default component$(() => {
                     </label>
                     <ImageCarousel
                       images={imagesPreviewSignal.value}
-                      onDelete={(index) => handleImageDelete(index, imagesSignal, imagesPreviewSignal)}
+                      onDelete={onDelete}
                       showDeleteButton={true}
                     />
                   </div>

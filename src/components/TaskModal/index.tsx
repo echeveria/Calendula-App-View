@@ -69,7 +69,7 @@ export const TaskModal = component$<TaskModalProps>((props) => {
       }
     } else {
       infoSignal.value = "";
-      statusSignal.value = "not_started";
+      statusSignal.value = "pending";
       gardenSignal.value = "";
     }
 

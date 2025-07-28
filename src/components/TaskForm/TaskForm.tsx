@@ -1,4 +1,4 @@
-import { $, component$, Signal, useSignal, NoSerialize } from "@builder.io/qwik";
+import { $, component$, Signal, useSignal, NoSerialize, useTask$ } from "@builder.io/qwik";
 import { GardensSelector } from "~/components/GardensSelector";
 import {
   taskStatusValue,
@@ -45,7 +45,6 @@ export const TaskForm = component$<TaskFormProps>((props) => {
     images,
     refreshReportsSignal,
   } = props;
-
   const deletable = useSignal(false);
   const isImageModalOpen = useSignal(false);
   const selectedImageUrl = useSignal("");
@@ -59,6 +58,20 @@ export const TaskForm = component$<TaskFormProps>((props) => {
   const reportImagesPreviewSignal = useSignal<NoSerialize<string[]>>(undefined);
   const reportImagesSignal = useSignal<NoSerialize<File[]>>(undefined);
   const reportSuccessMessage = useSignal("");
+
+  useTask$(async ({ track }) => {
+    const selectedGarden = track(() => gardenSignal.value);
+
+    if (!id && selectedGarden) {
+      try {
+        const response = await pb.collection("gardens").getOne(selectedGarden);
+        infoSignal.value = response.description;
+        console.log(infoSignal.value);
+      } catch (err: any) {
+        console.error("Error loading task configs:", err);
+      }
+    }
+  });
 
   const onSelectionChange = $((id: string) => (props.gardenSignal.value = id));
 
