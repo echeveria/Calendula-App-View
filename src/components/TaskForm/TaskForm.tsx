@@ -2,6 +2,7 @@ import { $, component$, Signal, useSignal, NoSerialize, useTask$ } from "@builde
 import { GardensSelector } from "~/components/GardensSelector";
 import {
   taskStatusValue,
+  formatStatus,
   handleImageDelete as utilsHandleImageDelete,
   handleImageUpload as utilsHandleImageUpload,
 } from "~/utils/views";
@@ -26,6 +27,9 @@ export interface TaskFormProps {
   id?: string;
   totalReports?: number;
   refreshReportsSignal?: Signal<number>;
+  hideTitle?: boolean;
+  hideActions?: boolean;
+  showReportFormSignal?: Signal<boolean>;
 }
 
 export const TaskForm = component$<TaskFormProps>((props) => {
@@ -44,13 +48,17 @@ export const TaskForm = component$<TaskFormProps>((props) => {
     handleImageUpload,
     images,
     refreshReportsSignal,
+    hideTitle = false,
+    hideActions = false,
+    showReportFormSignal,
   } = props;
   const deletable = useSignal(false);
   const isImageModalOpen = useSignal(false);
   const selectedImageUrl = useSignal("");
 
-  // Report form state
-  const showReportForm = useSignal(false);
+  // Report form state - use shared signal if provided, otherwise local
+  const localShowReportForm = useSignal(false);
+  const showReportForm = showReportFormSignal || localShowReportForm;
   const reportTitleSignal = useSignal("");
   const reportContentSignal = useSignal("");
   const reportMarkedAsReadSignal = useSignal(false);
@@ -116,8 +124,15 @@ export const TaskForm = component$<TaskFormProps>((props) => {
   // Toggle report form visibility
   const toggleReportForm = $(() => {
     showReportForm.value = !showReportForm.value;
-    // Clear success message when toggling form
     reportSuccessMessage.value = "";
+    if (showReportForm.value) {
+      setTimeout(() => {
+        const el = document.getElementById("report-form-section");
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 100);
+    }
   });
 
   // Handle report submission
@@ -186,8 +201,8 @@ export const TaskForm = component$<TaskFormProps>((props) => {
 
   return (
     <>
-      <form preventdefault:submit onSubmit$={handleSubmit} class="space-y-4">
-        <h3 class="font-bold text-lg mb-4">{title}</h3>
+      <div class="space-y-4">
+        {!hideTitle && <h3 class="font-bold text-lg mb-4">{title}</h3>}
 
         {/* Success message for report creation */}
         {reportSuccessMessage.value && (
@@ -224,7 +239,7 @@ export const TaskForm = component$<TaskFormProps>((props) => {
           >
             {taskStatusValue.map((config) => (
               <option key={config} value={config}>
-                {config}
+                {formatStatus(config)}
               </option>
             ))}
           </select>
@@ -307,30 +322,11 @@ export const TaskForm = component$<TaskFormProps>((props) => {
             </div>
           </div>
         )}
-        <div class="form-control mt-6">
-          <div class="join flex justify-between">
-            <button
-              type="submit"
-              class={`btn btn-primary ${isLoading.value ? "loading" : ""}`}
-              disabled={isLoading.value}
-            >
-              {isLoading.value ? "Updating..." : btnTitle}
-            </button>
-            <button type="button" class="btn btn-accent" onClick$={toggleReportForm}>
-              {showReportForm.value ? "Скрий Рапорт" : "Създай Рапорт"}
-            </button>
-            {id && (
-              <button class="btn btn-error" onClick$={handleDelete}>
-                Изтрий
-              </button>
-            )}
-          </div>
-        </div>
-      </form>
+      </div>
 
       {/* Report Form */}
       {showReportForm.value && id && (
-        <div class="mt-6 p-4 border border-accent border-4 rounded">
+        <div id="report-form-section" class="mt-6 p-4 border border-accent border-4 rounded">
           <ReportForm
             handleSubmit={handleReportSubmit}
             titleSignal={reportTitleSignal}
@@ -347,6 +343,30 @@ export const TaskForm = component$<TaskFormProps>((props) => {
               utilsHandleImageDelete(index, reportImagesSignal, reportImagesPreviewSignal)
             )}
           />
+        </div>
+      )}
+
+      {/* Action buttons - not rendered when hideActions (modal renders its own) */}
+      {!hideActions && (
+        <div class="sticky bottom-0 z-10 bg-base-100 border-t border-base-300 px-4 py-3 mt-auto">
+          <div class="flex gap-2">
+            <button
+              type="button"
+              class={`btn btn-sm sm:btn-md btn-primary flex-1 min-w-0 ${isLoading.value ? "loading" : ""}`}
+              disabled={isLoading.value}
+              onClick$={handleSubmit}
+            >
+              {isLoading.value ? "..." : btnTitle}
+            </button>
+            <button type="button" class="btn btn-sm sm:btn-md btn-accent flex-1 min-w-0" onClick$={toggleReportForm}>
+              {showReportForm.value ? "Скрий" : "Рапорт"}
+            </button>
+            {id && (
+              <button type="button" class="btn btn-sm sm:btn-md btn-error flex-1 min-w-0" onClick$={handleDelete}>
+                Изтрий
+              </button>
+            )}
+          </div>
         </div>
       )}
 

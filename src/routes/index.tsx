@@ -12,10 +12,10 @@ export default component$(() => {
         <div class="hero-overlay bg-opacity-60"></div>
         <div class="hero-content text-center text-neutral-content">
           <div class="max-w-md">
-            <h1 class="mb-5 text-5xl font-bold">
+            <h1 class="mb-5 text-2xl sm:text-4xl md:text-5xl font-bold">
               Calendula App <br /> & <br /> Miron Style Garden
             </h1>
-            <p class="mb-5">
+            <p class="mb-5 text-sm sm:text-base">
               Професионално озеленяване и поддръжка на частни имоти и паркове. Мониторинг на
               дейностите и управление на задачите.
             </p>
@@ -27,10 +27,10 @@ export default component$(() => {
       </section>
 
       {/* Services Section */}
-      <section class="py-16 bg-base-100">
-        <div class="container mx-auto px-4">
-          <h2 class="text-3xl font-bold text-center mb-12">Нашите услуги</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <section class="py-8 sm:py-12 md:py-16 bg-base-100">
+        <div class="container mx-auto px-3 sm:px-4">
+          <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12">Нашите услуги</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             <div class="card bg-base-200 shadow-xl">
               <figure>
                 <img
@@ -84,10 +84,10 @@ export default component$(() => {
       </section>
 
       {/* Features Section */}
-      <section class="py-16 bg-base-200">
-        <div class="container mx-auto px-4">
-          <h2 class="text-3xl font-bold text-center mb-12">Система за управление</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <section class="py-8 sm:py-12 md:py-16 bg-base-200">
+        <div class="container mx-auto px-3 sm:px-4">
+          <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12">Система за управление</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
             <div class="card bg-base-100 shadow-xl">
               <div class="card-body">
                 <h3 class="card-title">Календар на задачите</h3>
@@ -197,9 +197,9 @@ export default component$(() => {
       {/*</section>*/}
 
       {/* CTA Section */}
-      <section class="py-16 bg-secondary text-primary-content">
-        <div class="container mx-auto px-4 text-center">
-          <h2 class="text-3xl font-bold mb-6">Готови ли сте да трансформирате вашата градина?</h2>
+      <section class="py-8 sm:py-12 md:py-16 bg-secondary text-primary-content">
+        <div class="container mx-auto px-3 sm:px-4 text-center">
+          <h2 class="text-xl sm:text-2xl md:text-3xl font-bold mb-6">Готови ли сте да трансформирате вашата градина?</h2>
           <p class="mb-8 max-w-2xl mx-auto">
             Свържете се с нас днес, за да обсъдим как можем да помогнем за озеленяването и
             поддръжката на вашия имот.
@@ -217,7 +217,7 @@ export default component$(() => {
 
       {/* Footer */}
       <footer
-        class="footer md:footer p-10 bg-neutral text-neutral-content flex flex-col md:flex-row md:justify-between"
+        class="footer md:footer p-4 sm:p-6 md:p-10 bg-neutral text-neutral-content flex flex-col md:flex-row md:justify-between"
         id="contact"
       >
         {/*<div class="md:text-left">*/}
@@ -248,7 +248,7 @@ export default component$(() => {
           <p>Email: pindevmiroslav@gmail.com</p>
         </div>
       </footer>
-      <footer class="footer flex flex-col sm:flex-row items-center justify-between px-10 py-4 border-t bg-neutral text-neutral-content border-base-300">
+      <footer class="footer flex flex-col sm:flex-row items-center justify-between px-4 sm:px-6 md:px-10 py-4 border-t bg-neutral text-neutral-content border-base-300">
         <div class="text-center sm:text-left mb-4 sm:mb-0">
           <p>Calendula © 2025 - Всички права запазени</p>
         </div>

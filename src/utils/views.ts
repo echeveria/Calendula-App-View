@@ -43,10 +43,8 @@ export const statusToBGValue = (status: taskStatus): string => {
   }
 };
 
-export function formatStatus(str: string): string {
-  return str
-    .replace(/_/g, " ") // заменя _ с интервал
-    .replace(/\b\w/g, (c) => c.toUpperCase()); // прави всяка дума с главна буква
+export function formatStatus(status: string): string {
+  return statusToBGValue(status as taskStatus) || status;
 }
 
 export const handleImageUpload = $(

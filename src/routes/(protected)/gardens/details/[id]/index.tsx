@@ -145,9 +145,9 @@ export default component$(() => {
     }, 300);
   });
   return (
-    <div class="container mx-auto p-4">
+    <div class="container mx-auto lg:p-4">
       <div class="object-info">
-        <h1 class="text-2xl font-bold mb-6">Детайли за градината</h1>
+        <h1 class="text-2xl font-bold mb-6 ml-2">Детайли за градината</h1>
 
         {isLoading.value && (
           <div class="flex justify-center items-center p-8">

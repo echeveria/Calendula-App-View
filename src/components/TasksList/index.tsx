@@ -275,12 +275,12 @@ export const TasksList = component$<TasksListProps>(
                       <td>{new Date(task.due_date).toLocaleDateString()}</td>
                       {showActions && (
                         <td onClick$={(e) => e.stopPropagation()}>
-                          <div class="flex space-x-2">
-                            <a href={`/tasks/edit/${task.id}`} class="btn btn-sm btn-primary">
+                          <div class="flex flex-col sm:flex-row gap-1 sm:gap-2">
+                            <a href={`/tasks/edit/${task.id}`} class="btn btn-xs sm:btn-sm btn-primary">
                               Редактирай
                             </a>
                             <button
-                              class={`btn btn-sm btn-error ${isDeleting.value ? "loading" : ""}`}
+                              class={`btn btn-xs sm:btn-sm btn-error ${isDeleting.value ? "loading" : ""}`}
                               onClick$={() => deleteTask(task.id)}
                               disabled={isDeleting.value}
                             >

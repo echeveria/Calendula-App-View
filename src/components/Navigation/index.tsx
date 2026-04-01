@@ -30,12 +30,7 @@ export const Navigation = component$(() => {
     <div class="navbar bg-base-100 shadow-md sticky top-0 z-50">
       <div class="navbar-start">
         <div class="dropdown">
-          <div
-            tabIndex={0}
-            role="button"
-            class="btn btn-ghost lg:hidden"
-            onClick$={() => (isMenuOpen.value = !isMenuOpen.value)}
-          >
+          <div tabIndex={0} role="button" class="btn btn-ghost lg:hidden">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-5 w-5"
@@ -46,77 +41,72 @@ export const Navigation = component$(() => {
               <path stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
             </svg>
           </div>
-          {!isMenuOpen.value && (
-            <ul
-              tabIndex={0}
-              class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
-            >
-              {!isLoggedIn.value ? (
-                <>
-                  <li>
-                    <a
-                      href="/login"
-                      class={location.url.pathname === "/login/" ? "menu-active" : ""}
-                    >
-                      Вход
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="/register"
-                      class={location.url.pathname === "/register/" ? "menu-active" : ""}
-                    >
-                      Регистрация
-                    </a>
-                  </li>
-                </>
-              ) : (
-                <>
-                  <li>
-                    <a
-                      href="/calendar"
-                      class={location.url.pathname === "/calendar/" ? "menu-active" : ""}
-                    >
-                      Календар
-                    </a>
-                    <li>
-                      <a
-                        href="/gardens"
-                        class={location.url.pathname === "/gardens/" ? "menu-active" : ""}
-                      >
-                        Обекти
-                      </a>
-                    </li>
-                  </li>
-                  <li>
-                    <a
-                      href="/tasks"
-                      class={location.url.pathname.startsWith("/tasks/") ? "menu-active" : ""}
-                    >
-                      Задачи
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="/reports"
-                      class={location.url.pathname.startsWith("/reports/") ? "menu-active" : ""}
-                    >
-                      Рапорти
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" onClick$={handleLogout}>
-                      Изход
-                    </a>
-                  </li>
-                </>
-              )}
-            </ul>
-          )}
+          <ul
+            tabIndex={0}
+            class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+          >
+            {!isLoggedIn.value ? (
+              <>
+                <li>
+                  <a href="/login" class={location.url.pathname === "/login/" ? "menu-active" : ""}>
+                    Вход
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/register"
+                    class={location.url.pathname === "/register/" ? "menu-active" : ""}
+                  >
+                    Регистрация
+                  </a>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <a
+                    href="/calendar"
+                    class={location.url.pathname === "/calendar/" ? "menu-active" : ""}
+                  >
+                    Календар
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/gardens"
+                    class={location.url.pathname === "/gardens/" ? "menu-active" : ""}
+                  >
+                    Обекти
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/tasks"
+                    class={location.url.pathname.startsWith("/tasks/") ? "menu-active" : ""}
+                  >
+                    Задачи
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/reports"
+                    class={location.url.pathname.startsWith("/reports/") ? "menu-active" : ""}
+                  >
+                    Рапорти
+                  </a>
+                </li>
+                <li>
+                  <a href="#" onClick$={handleLogout}>
+                    Изход
+                  </a>
+                </li>
+              </>
+            )}
+          </ul>
         </div>
-        <a href="/" class="flex items-center text-xl">
-          <img src={logo} width="50" height="50" />
-          Calendula App
+        <a href="/" class="flex items-center text-base sm:text-xl">
+          <img src={logo} width="40" height="40" class="sm:w-[50px] sm:h-[50px]" />
+          <span class="hidden xs:inline sm:inline">Calendula</span>
         </a>
       </div>
       <div class="navbar-center hidden lg:flex">

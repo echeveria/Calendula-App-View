@@ -100,13 +100,12 @@ export default component$(() => {
         locales: [bgLocale],
         locale: "bg",
         titleFormat: { month: "long" },
-        headerToolbar: {
-          left: "title",
-          right: "dayGridMonth,timeGridWeek,timeGridDay",
-        },
-        footerToolbar: {
-          right: "prev,next",
-        },
+        headerToolbar: window.innerWidth < 400
+          ? { left: "title", right: "prev,next" }
+          : { left: "title", right: "dayGridMonth,timeGridWeek,timeGridDay" },
+        footerToolbar: window.innerWidth < 400
+          ? { center: "dayGridMonth,timeGridWeek,timeGridDay" }
+          : { right: "prev,next" },
         dayMaxEventRows: true,
         views: {
           timeGrid: { dayMaxEventRows: 3 },
@@ -148,7 +147,7 @@ export default component$(() => {
   });
 
   return (
-    <div class="h-full p-4 bg-base-200">
+    <div class="h-full p-2 sm:p-4 bg-base-200">
       <CalendarStatusFilter
         currentStatusFilter={statusFilter}
         handleStatusFilterChange={onFilterChange}

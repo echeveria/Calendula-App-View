@@ -74,9 +74,9 @@ export default component$(() => {
   });
 
   return (
-    <div class="min-h-screen bg-base-200 p-4">
+    <div class="min-h-screen bg-base-200 p-2 sm:p-4">
       <div class="max-w-md md:max-w-2xl lg:max-w-3xl mx-auto">
-        <h1 class="text-3xl font-bold mb-6">Създай репорт</h1>
+        <h1 class="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">Създай репорт</h1>
 
         {errorSignal.value && (
           <div class="alert alert-error mb-4">

@@ -13,8 +13,8 @@ export default component$(() => {
   });
 
   return (
-    <div class="container mx-auto p-4">
-      <h1 class="text-2xl font-bold mb-6">Обекти</h1>
+    <div class="container mx-auto py-4">
+      <h1 class="text-2xl font-bold mb-6 ml-2">Обекти</h1>
       <GardensList onRefresh={handleRefresh} showActions={true} showCreateButton={true} />
     </div>
   );
