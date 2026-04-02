@@ -1,25 +1,30 @@
 import { component$ } from "@builder.io/qwik";
-import type { DocumentHead, RequestHandler } from "@builder.io/qwik-city";
+import { routeLoader$, type DocumentHead } from "@builder.io/qwik-city";
 
-export const onRequest: RequestHandler = ({ redirect, url }) => {
-  if (url.hostname === "gardenexpert.hopto.org") {
-    throw redirect(302, "/login");
-  }
-};
+export const useHostname = routeLoader$(({ url }) => {
+  return url.hostname;
+});
 
 export default component$(() => {
+  const hostname = useHostname();
+  const isGardenExpert = hostname.value === "gardenexpert.hopto.org";
+
   return (
     <div class="min-h-screen">
       {/* Hero Section */}
       <section
         class="hero min-h-[70vh] bg-base-200"
-        style="background-image: url('https://images.unsplash.com/photo-1558904541-efa843a96f01?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80'); background-size: cover; background-position: center;"
+        style={
+          isGardenExpert
+            ? "background-image: url('https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80'); background-size: cover; background-position: center;"
+            : "background-image: url('https://images.unsplash.com/photo-1558904541-efa843a96f01?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80'); background-size: cover; background-position: center;"
+        }
       >
         <div class="hero-overlay bg-opacity-60"></div>
         <div class="hero-content text-center text-neutral-content">
           <div class="max-w-md">
             <h1 class="mb-5 text-2xl sm:text-4xl md:text-5xl font-bold">
-              Calendula App <br /> & <br /> Miron Style Garden
+              {isGardenExpert ? "Garden Expert" : <>Calendula App <br /> & <br /> Miron Style Garden</>}
             </h1>
             <p class="mb-5 text-sm sm:text-base">
               Професионално озеленяване и поддръжка на частни имоти и паркове. Мониторинг на
@@ -136,72 +141,6 @@ export default component$(() => {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      {/*<section class="py-16 bg-base-100">*/}
-      {/*  <div class="container mx-auto px-4">*/}
-      {/*    <h2 class="text-3xl font-bold text-center mb-12">Какво казват нашите клиенти</h2>*/}
-      {/*    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">*/}
-      {/*      <div class="card bg-base-200 shadow-xl">*/}
-      {/*        <div class="card-body">*/}
-      {/*          <div class="flex items-center mb-4">*/}
-      {/*            <div class="avatar">*/}
-      {/*              <div class="w-12 rounded-full">*/}
-      {/*                <img src="https://i.pravatar.cc/150?img=1" alt="Клиент" />*/}
-      {/*              </div>*/}
-      {/*            </div>*/}
-      {/*            <div class="ml-4">*/}
-      {/*              <h3 class="font-bold">Иван Петров</h3>*/}
-      {/*              <p class="text-sm">Собственик на вила</p>*/}
-      {/*            </div>*/}
-      {/*          </div>*/}
-      {/*          <p>*/}
-      {/*            "Изключително съм доволен от работата на ДворЧек. Градината ми никога не е*/}
-      {/*            изглеждала по-добре, а чрез системата им винаги знам какви дейности са извършени."*/}
-      {/*          </p>*/}
-      {/*        </div>*/}
-      {/*      </div>*/}
-      {/*      <div class="card bg-base-200 shadow-xl">*/}
-      {/*        <div class="card-body">*/}
-      {/*          <div class="flex items-center mb-4">*/}
-      {/*            <div class="avatar">*/}
-      {/*              <div class="w-12 rounded-full">*/}
-      {/*                <img src="https://i.pravatar.cc/150?img=5" alt="Клиент" />*/}
-      {/*              </div>*/}
-      {/*            </div>*/}
-      {/*            <div class="ml-4">*/}
-      {/*              <h3 class="font-bold">Мария Иванова</h3>*/}
-      {/*              <p class="text-sm">Управител на жилищен комплекс</p>*/}
-      {/*            </div>*/}
-      {/*          </div>*/}
-      {/*          <p>*/}
-      {/*            "Системата за мониторинг на ДворЧек значително улесни управлението на зелените*/}
-      {/*            площи в нашия комплекс. Препоръчвам ги горещо!"*/}
-      {/*          </p>*/}
-      {/*        </div>*/}
-      {/*      </div>*/}
-      {/*      <div class="card bg-base-200 shadow-xl">*/}
-      {/*        <div class="card-body">*/}
-      {/*          <div class="flex items-center mb-4">*/}
-      {/*            <div class="avatar">*/}
-      {/*              <div class="w-12 rounded-full">*/}
-      {/*                <img src="https://i.pravatar.cc/150?img=8" alt="Клиент" />*/}
-      {/*              </div>*/}
-      {/*            </div>*/}
-      {/*            <div class="ml-4">*/}
-      {/*              <h3 class="font-bold">Георги Димитров</h3>*/}
-      {/*              <p class="text-sm">Собственик на хотел</p>*/}
-      {/*            </div>*/}
-      {/*          </div>*/}
-      {/*          <p>*/}
-      {/*            "Благодарение на ДворЧек, градината на нашия хотел винаги е в перфектно състояние.*/}
-      {/*            Календарът на задачите и отчетите са изключително полезни."*/}
-      {/*          </p>*/}
-      {/*        </div>*/}
-      {/*      </div>*/}
-      {/*    </div>*/}
-      {/*  </div>*/}
-      {/*</section>*/}
-
       {/* CTA Section */}
       <section class="py-8 sm:py-12 md:py-16 bg-secondary text-primary-content">
         <div class="container mx-auto px-3 sm:px-4 text-center">
@@ -226,37 +165,25 @@ export default component$(() => {
         class="footer md:footer p-4 sm:p-6 md:p-10 bg-neutral text-neutral-content flex flex-col md:flex-row md:justify-between"
         id="contact"
       >
-        {/*<div class="md:text-left">*/}
-        {/*  <span class="footer-title">Услуги</span>*/}
-        {/*  <a class="link link-hover">Озеленяване</a>*/}
-        {/*  <a class="link link-hover">Поддръжка</a>*/}
-        {/*  <a class="link link-hover">Ландшафтен дизайн</a>*/}
-        {/*  <a class="link link-hover">Напоителни системи</a>*/}
-        {/*</div>*/}
-        {/*<div>*/}
-        {/*  <span class="footer-title">Компания</span>*/}
-        {/*  <a class="link link-hover">За нас</a>*/}
-        {/*  <a class="link link-hover">Контакти</a>*/}
-        {/*  <a class="link link-hover">Кариери</a>*/}
-        {/*  <a class="link link-hover">Блог</a>*/}
-        {/*</div>*/}
         <span class="footer-title -mb-10">Контакти</span>
+        {!isGardenExpert && (
+          <div class="md:text-left mt-8 md:mt-0">
+            <span class="footer-title">Calendula App</span>
+            <p>гр. Пловдив, 4000</p>
+            <p>Тел. +359877202617</p>
+            <p>Email: s.p.germanov@gmail.com</p>
+          </div>
+        )}
         <div class="md:text-left mt-8 md:mt-0">
-          <span class="footer-title">Calendula App</span>
+          <span class="footer-title">{isGardenExpert ? "Garden Expert" : "Miron Style Garden"}</span>
           <p>гр. Пловдив, 4000</p>
-          <p>Тел. +359877202617</p>
-          <p>Email: s.p.germanov@gmail.com</p>
-        </div>
-        <div class="md:text-left mt-8 md:mt-0">
-          <span class="footer-title">Miron Style Garden</span>
-          <p>гр. Пловдив, 4000</p>
-          <p>Тел. +359895606248</p>
-          <p>Email: pindevmiroslav@gmail.com</p>
+          <p>Тел. {isGardenExpert ? "+359 888 123 456" : "+359895606248"}</p>
+          <p>Email: {isGardenExpert ? "info@gardenexpert.bg" : "pindevmiroslav@gmail.com"}</p>
         </div>
       </footer>
       <footer class="footer flex flex-col sm:flex-row items-center justify-between px-4 sm:px-6 md:px-10 py-4 border-t bg-neutral text-neutral-content border-base-300">
         <div class="text-center sm:text-left mb-4 sm:mb-0">
-          <p>Calendula © 2025 - Всички права запазени</p>
+          <p>{isGardenExpert ? "Garden Expert" : "Calendula"} &copy; 2025 - Всички права запазени</p>
         </div>
         <div class="flex justify-center">
           <div class="grid grid-flow-col gap-4">
