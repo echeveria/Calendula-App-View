@@ -7,7 +7,6 @@ import logo from "~/../public/logo.svg";
 export const Navigation = component$(() => {
   const location = useLocation();
   const navigate = useNavigate();
-  const isMenuOpen = useSignal(false);
   const isLoggedIn = useSignal(false);
 
   // Check if user is logged in
