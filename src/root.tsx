@@ -27,6 +27,11 @@ export default component$(() => {
       </head>
       <body lang="en" data-theme="lemonade" class="h-[100vh]">
         <RouterOutlet />
+        <script dangerouslySetInnerHTML={`
+          if (window.location.hostname === "gardenexpert.hopto.org") {
+            document.body.setAttribute("data-theme", "aqua");
+          }
+        `} />
       </body>
     </QwikCityProvider>
   );
