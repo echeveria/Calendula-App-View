@@ -29,7 +29,7 @@ export default component$(() => {
         <RouterOutlet />
         <script dangerouslySetInnerHTML={`
           if (window.location.hostname === "gardenexpert.hopto.org") {
-            document.body.setAttribute("data-theme", "aqua");
+            document.body.setAttribute("data-theme", "winter");
           }
         `} />
       </body>
