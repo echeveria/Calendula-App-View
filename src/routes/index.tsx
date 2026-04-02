@@ -1,5 +1,11 @@
 import { component$ } from "@builder.io/qwik";
-import type { DocumentHead } from "@builder.io/qwik-city";
+import type { DocumentHead, RequestHandler } from "@builder.io/qwik-city";
+
+export const onRequest: RequestHandler = ({ redirect, url }) => {
+  if (url.hostname === "gardenexpert.hopto.org") {
+    throw redirect(302, "/login");
+  }
+};
 
 export default component$(() => {
   return (
